@@ -1,0 +1,4 @@
+data/sih_aih_env_2011_2020_pneucom.csv filter=lfs diff=lfs merge=lfs -text
+data/cnes_estabelecimentos.csv filter=lfs diff=lfs merge=lfs -text
+data/profissionais-330000.csv filter=lfs diff=lfs merge=lfs -text
+data/base_mortalidade.csv filter=lfs diff=lfs merge=lfs -text
