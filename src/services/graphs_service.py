@@ -626,7 +626,7 @@ def graph_UTI_lethality(base,dfWHO,show_plot):
     dfletalidade_uti['taxa_ajustada_100mil'] = (dfletalidade_uti['taxa_ajustada']*100000).apply(np.ceil)
     dfletalidade_uti['taxa_bruta_100mil'] = (dfletalidade_uti['num']/dfletalidade_uti['admissoes'])*100000
 
-    tx_let_uti = round((dfletalidade_uti['taxa_ajustada'])*100,4)
+    tx_let_uti = round((dfletalidade_uti['taxa_ajustada_100mil']),1)
 
     r = [0,1,2,3,4,5,6,7,8]
 
@@ -634,13 +634,12 @@ def graph_UTI_lethality(base,dfWHO,show_plot):
     p1 = ax1.plot(r, tx_let_uti, marker='o', markerfacecolor='#380282', markersize=4, color = '#380282' , label='Mortality rate')
 
     ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019"])
-    ax1.set_yticks([0,10,20,30,40,50,60],['0%','10%','20%','30%','40%','50%','60%'])
-    ax1.set_ylabel('Proportion', fontweight='bold')
-    ax1.set_title("Lethality Rate", fontweight='bold')
-    a = [1,-1,1,-1,1,-1,1,-1,1,-1]
+    # ax1.set_yticks([0,10,20,30,40,50,60],['0%','10%','20%','30%','40%','50%','60%'])
+    ax1.set_ylabel('Age-adjusted Lethality rate', fontweight='bold')
+    ax1.set_title("Lethality when using UTI",fontweight='bold')
 
     for i in range(len(tx_let_uti)):
-        ax1.text(r[i], tx_let_uti[i]+(a[i])*2.2, "%.4f" %tx_let_uti[i], ha="center", fontweight='bold')
+        ax1.text(r[i], tx_let_uti[i]+100, "%d" %tx_let_uti[i], ha="center", fontweight='bold')
         
     fig.set_facecolor("#E5F2A5")
 

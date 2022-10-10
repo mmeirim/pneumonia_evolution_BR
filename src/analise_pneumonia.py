@@ -27,6 +27,7 @@ import seaborn as sns
 import services.datasets_service as datasets_service
 import services.statistics_service as statistics_service
 import services.graphs_service as graphs_service
+import services.tables_service as tables_service
 
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
@@ -70,3 +71,10 @@ graphs_service.graph_UTI_utilization_by_age(pneumoCom_dataset_clean,SHOW_PLOTS)
 graphs_service.graph_UTI_lethality(pneumoCom_dataset_clean,who_age_group_rate_dataset,SHOW_PLOTS)
 
 print("############# GENERATE GRAPHS FINISHED #################")
+
+print("############# GENERATING TABLES #################")
+
+tables_service.generate_overview_table(pneumoCom_dataset_clean)
+tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group)
+
+print("############# GENERATE TABLES FINISHED #################")

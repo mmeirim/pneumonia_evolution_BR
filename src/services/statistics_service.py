@@ -108,7 +108,7 @@ def registros_ano(lst_dfs,lst_nomes,col_ano):
 
     df_first = df_first.set_index(col_ano).T
     df_first['Analise'] = nome
-    df_first['delta'] = ((df_first[2020] - df_first[2011])/df_first[2011])*100
+    df_first['delta'] = ((df_first[2019] - df_first[2011])/df_first[2011])*100
 
     for i in range(1,len(lst_dfs)):
         df = lst_dfs[i].copy()
@@ -120,7 +120,7 @@ def registros_ano(lst_dfs,lst_nomes,col_ano):
 
         df = df.set_index(col_ano).T
         df['Analise'] = nome
-        df['delta'] = ((df[2020] - df[2011])/df[2011])*100
+        df['delta'] = ((df[2019] - df[2011])/df[2011])*100
     
         df_first = pd.concat([df_first,df])
     
