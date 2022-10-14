@@ -6,34 +6,34 @@ import services.statistics_service as statistics_service
 
 IMAGES_BASE_DIR = '../images/'
 
-def graph_population_rate_by_sex(pop_ref_by_sex,show_plot):
-    pop_total = pop_ref_by_sex[pop_ref_by_sex['sex']=='all']['population'].reset_index()
+# def graph_population_rate_by_sex(pop_ref_by_sex,show_plot):
+#     pop_total = pop_ref_by_sex[pop_ref_by_sex['sex']=='all']['population'].reset_index()
 
-    pop_homens = pop_ref_by_sex[pop_ref_by_sex['sex']=='male']['population'].reset_index()
-    pop_mulheres = pop_ref_by_sex[pop_ref_by_sex['sex']=='female']['population'].reset_index()
+#     pop_homens = pop_ref_by_sex[pop_ref_by_sex['sex']=='male']['population'].reset_index()
+#     pop_mulheres = pop_ref_by_sex[pop_ref_by_sex['sex']=='female']['population'].reset_index()
 
-    r = [0,1,2,3,4,5,6,7,8]
-    g1_bars_bottom = round((pop_homens/pop_total)*100)['population']
-    g1_bars_top = round((pop_mulheres/pop_total)*100)['population']
+#     r = [0,1,2,3,4,5,6,7,8]
+#     g1_bars_bottom = round((pop_homens/pop_total)*100)['population']
+#     g1_bars_top = round((pop_mulheres/pop_total)*100)['population']
 
-    fig, ax1 = plt.subplots(1,1,sharex=True,sharey=True,)
-    p1 = ax1.bar(r, g1_bars_bottom, edgecolor='white', color = '#380282' , label='Homens')
-    p2 = ax1.bar(r, g1_bars_top, bottom=g1_bars_bottom, edgecolor='white', color = '#DC143C', label='Mulheres')
-    ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019"])
-    ax1.set_yticks([0,25,50,75,100],['0%','25%','50%','75%','100%'])
-    ax1.set_ylabel('Proportion', fontweight='bold')
-    ax1.set_title("Population", fontweight='bold')
-    ax1.bar_label(p1, label_type='center', fontweight='bold')
-    ax1.bar_label(p2, label_type='center', fontweight='bold')
+#     fig, ax1 = plt.subplots(1,1,sharex=True,sharey=True,)
+#     p1 = ax1.bar(r, g1_bars_bottom, edgecolor='white', color = '#380282' , label='Homens')
+#     p2 = ax1.bar(r, g1_bars_top, bottom=g1_bars_bottom, edgecolor='white', color = '#DC143C', label='Mulheres')
+#     ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019"])
+#     ax1.set_yticks([0,25,50,75,100],['0%','25%','50%','75%','100%'])
+#     ax1.set_ylabel('Proportion', fontweight='bold')
+#     ax1.set_title("Population", fontweight='bold')
+#     ax1.bar_label(p1, label_type='center', fontweight='bold')
+#     ax1.bar_label(p2, label_type='center', fontweight='bold')
 
-    fig.set_facecolor("#E5F2A5")
-    handles, labels = ax1.get_legend_handles_labels()
-    fig.set_figheight(6)
-    fig.set_figwidth(10)
-    fig.legend(handles, labels, loc = (0.35, 0.01), ncol=2, labelspacing=0.)
-    plt.savefig(IMAGES_BASE_DIR+'population_by_sex.png',dpi=1200)
-    if(show_plot): plt.show()
-    return
+#     fig.set_facecolor("#E5F2A5")
+#     handles, labels = ax1.get_legend_handles_labels()
+#     fig.set_figheight(6)
+#     fig.set_figwidth(10)
+#     fig.legend(handles, labels, loc = (0.35, 0.01), ncol=2, labelspacing=0.)
+#     plt.savefig(IMAGES_BASE_DIR+'population_by_sex.png',dpi=1200)
+#     if(show_plot): plt.show()
+#     return
 
 def graph_admissions_by_sex(pneumoCom_dataset_clean,show_plot):
     admissoes_total = pneumoCom_dataset_clean.groupby(['ano_inter']).agg({'id':'count'})
@@ -208,7 +208,7 @@ def graph_mortality_and_lethality(base,dfWHO,pop_ref,show_plot):
 
 
     tx_mort = round(dfmortalidade['taxa_ajustada_100mil'],1)
-    tx_let = round((dfletalidade['taxa_ajustada_100mil']),1)
+    tx_let = round(dfletalidade['taxa_ajustada']*100,1)
 
     r = [0,1,2,3,4,5,6,7,8]
 

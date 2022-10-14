@@ -8,17 +8,33 @@ def get_reference_population_by_age_group_and_year(reference_population,pneumoCo
     idadeWHO.drop('id',axis=1,inplace=True)
 
     pop_ref_by_age_group_and_year = pd.merge(pop_ref_by_age_group_and_year,idadeWHO, how='left', left_on='age',right_on='idade_real_anos')
-    pop_ref_by_age_group_and_year[pop_ref_by_age_group_and_year['year']==2011]
     pop_ref_by_age_group_and_year = pop_ref_by_age_group_and_year.groupby(['year','idade_grupo_who']).agg({'population':'sum'}).reset_index()
     
     return pop_ref_by_age_group_and_year
 
-def get_reference_population_by_sex_and_year(reference_population):
-    pop_ref_by_sex = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['year'].isin(range(2011,2020)))]
+def get_reference_population_by_sex_and_year(reference_population,pneumoCom_dataset):
+    pop_ref_by_sex = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']!='all') & (reference_population['year'].isin(range(2011,2020)))]
     pop_ref_by_sex['age'] = pop_ref_by_sex['age'].astype(int)
-    pop_ref_by_sex = pop_ref_by_sex[pop_ref_by_sex['age']>=20].groupby(['sex','year']).agg({'population':'sum'}).reset_index()
-    
+
+    idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
+    idadeWHO.drop('id',axis=1,inplace=True)
+
+    pop_ref_by_sex = pd.merge(pop_ref_by_sex,idadeWHO, how='left', left_on='age',right_on='idade_real_anos')
+    pop_ref_by_sex = pop_ref_by_sex.groupby(['year','sex','idade_grupo_who']).agg({'population':'sum'}).reset_index()
+        
     return pop_ref_by_sex
+
+def get_reference_population_by_age_group_region_and_year(reference_population,pneumoCom_dataset):
+    pop_ref_by_region = reference_population[(reference_population['age']!='TOTAL') & (reference_population['region'].isin(['North','Northeast','South','Southeast','Central-West'])) & (reference_population['sex']=='all') & (reference_population['year'].isin(range(2011,2020)))]
+    pop_ref_by_region['age'] = pop_ref_by_region['age'].astype(int)
+
+    idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
+    idadeWHO.drop('id',axis=1,inplace=True)
+
+    pop_ref_by_region = pd.merge(pop_ref_by_region,idadeWHO, how='left', left_on='age',right_on='idade_real_anos')
+    pop_ref_by_region = pop_ref_by_region.groupby(['year','uf','idade_grupo_who']).agg({'population':'sum'}).reset_index()
+    
+    return pop_ref_by_region
 
 def get_cnes_clean(cnes,cnes_prof):
     cnes_pf = cnes_prof.groupby('CNES').agg({'NOME':'count'}).reset_index() 

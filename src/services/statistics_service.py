@@ -45,40 +45,23 @@ def age_adjust_ML(df,dfWHO,pop_ref):
 
 
 def age_adjust(df,dfWHO,pop_ref):
-    
+
     df.columns = ['ano_inter','idade_grupo_who','num']
-    df_merged = pd.merge(pop_ref, df,  how='left', left_on=['year','idade_grupo_who'], right_on=['ano_inter','idade_grupo_who']) # junta a quantidade por ano por faixa etária com a população de referencia
+    df_merged = pd.merge(df,pop_ref,  how='left', left_on=['ano_inter','idade_grupo_who'], right_on=['year','idade_grupo_who']) # junta a quantidade por ano por faixa etária com a população de referencia
     df_merged['taxa'] = df_merged['num']/df_merged['population'] # calcula a taxa
     result = pd.merge(df_merged, dfWHO,  how='left', left_on=['idade_grupo_who'], right_on=['age_group']) # junta o dataframe com a proporção do WHO
     result['obitos_esp'] = result['taxa']*result['world_avg_dec'] # calcula a proporção da quantidade esperados
     df_result = result.groupby(['year']).agg({'num':'sum','obitos_esp':'sum','population':'sum','world_avg_dec':'sum'}).reset_index() # agrupa por ANO
-    # tx = obts esp / pop
-    #somar as faixas etarias do ano e dividir pela pop de ref total
+    #    # tx = obts esp / pop
+    #    #somar as faixas etarias do ano e dividir pela pop de ref total
     df_result['taxa_ajustada'] = df_result['obitos_esp']/df_result['world_avg_dec']
     df_result['taxa_ajustada_100mil'] = (df_result['taxa_ajustada']*100000).apply(np.ceil)
     df_result['taxa_bruta_100mil'] = (df_result['num']/df_result['population'])*100000
     df_result['taxa_ajd_qnt'] = df_result['obitos_esp']*df_result['population'] # calcula a quantidade para a populacao de referencia
     df_result['taxa_ajd_qnt_Y'] = df_result['taxa_ajd_qnt'].apply(np.ceil) # arredonda para ter um numero inteiro (count data)
-    #df_result = result.groupby(['year']).agg({'taxa_ajd_qnt_Y':'sum','population':'sum'}).reset_index() # agrupa por ANO
+    # #df_result = result.groupby(['year']).agg({'taxa_ajd_qnt_Y':'sum','population':'sum'}).reset_index() # agrupa por ANO
     df_result_final = df_result[['year','population','taxa_ajd_qnt_Y','taxa_ajustada_100mil']]
     return df_result_final
-
-
-#def aapc_offset(df,expr,name):
-#    y_train, X_train = dmatrices(expr, df, return_type='dataframe')
-#    poisson_training_results = sm.GLM(y_train, X_train, offset=X_train['np.log(population)'], family=sm.families.Poisson()).fit()
-#    #print(poisson_training_results.summary())
-#    aapc_value = (math.exp(poisson_training_results.params["year"]) - 1)*100
-#    aapc_inf = (math.exp(poisson_training_results.conf_int().loc['year',0]) - 1)*100
-#    aapc_sup = (math.exp(poisson_training_results.conf_int().loc['year',1]) - 1)*100
-#
-#    data = {'Analise': [name],
-#        'AAPC': [aapc_value],
-#        'IC_Inf': [aapc_inf],
-#        'IC_Sup': [aapc_sup]}
-#    df_results = pd.DataFrame(data)
-#    return df_results
-
 
 def aapc_offset(df,expr,name):
     y_train, X_train = dmatrices(expr, df, return_type='dataframe')
