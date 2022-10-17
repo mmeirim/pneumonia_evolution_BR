@@ -51,11 +51,6 @@ pneumoCom_dataset_clean = datasets_service.get_pneumoCom_dataset_clean(cid10_dat
 pneumoCom_mortality_dataset = datasets_service.get_pneumoCom_mortality_dataset(pneumoCom_dataset_clean)
 pneumoCom_LOS_UTI_dataset = datasets_service.get_pneumoCom_LOS_UTI_dataset(pneumoCom_dataset_clean)
 
-# reference_population_by_age_group.to_excel('../tables/reference_population_by_age_group.xlsx')
-# reference_population_by_age_group_region.to_excel('../tables/reference_population_by_age_group_region.xlsx')
-# reference_population_by_age_group_sex.to_excel('../tables/reference_population_by_age_group_sex.xlsx')
-# reference_population_by_age_group_sex[reference_population_by_age_group_sex['sex']=='female'].reset_index()[['year','idade_grupo_who','population']].to_excel('../tables/reference_population_by_age_group_female.xlsx')
-# reference_population_by_age_group_region[reference_population_by_age_group_region['uf']=='S'].reset_index()[['year','idade_grupo_who','population']].to_excel('../tables/reference_population_by_age_group_south.xlsx')
 print("############# READ DATASETS FINISHED #################")
 
 print("############# GENERATING GRAPHS #################")
@@ -81,7 +76,8 @@ print("############# GENERATE GRAPHS FINISHED #################")
 
 print("############# GENERATING TABLES #################")
 
-tables_service.generate_overview_table(pneumoCom_dataset_clean)
-tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,reference_population_by_age_group_sex,reference_population_by_age_group_region)
+# tables_service.generate_overview_table(pneumoCom_dataset_clean)
+# tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,reference_population_by_age_group_sex,reference_population_by_age_group_region)
+tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset)
 
 print("############# GENERATE TABLES FINISHED #################")

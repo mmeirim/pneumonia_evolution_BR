@@ -193,18 +193,7 @@ def graph_mortality_and_lethality(base,dfWHO,pop_ref,show_plot):
 
 
     dflet = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
-    dflet.columns = ['ano_inter','idade_grupo_who','admissoes','num']
-    #df_merged = pd.merge(pop_ref, df,  how='left', left_on=['year','idade_grupo_who'], right_on=['ano_inter','idade_grupo_who']) # junta a quantidade por ano por faixa etária com a população de referencia
-    dflet['taxa'] = dflet['num']/dflet['admissoes'] # calcula a taxa
-    dfletalidade = pd.merge(dflet, dfWHO,  how='left', left_on=['idade_grupo_who'], right_on=['age_group']) # junta o dataframe com a proporção do WHO
-    dfletalidade['obitos_esp'] = dfletalidade['taxa']*dfletalidade['world_avg_dec'] # calcula a proporção da quantidade esperados
-    dfletalidade = dfletalidade.groupby(['ano_inter']).agg({'num':'sum','obitos_esp':'sum','admissoes':'sum','world_avg_dec':'sum'}).reset_index() # agrupa por ANO
-    # tx = obts esp / pop
-    #somar as faixas etarias do ano e dividir pela pop de ref total
-    dfletalidade['taxa_ajustada'] = dfletalidade['obitos_esp']/dfletalidade['world_avg_dec']
-    dfletalidade['taxa_ajustada_100mil'] = (dfletalidade['taxa_ajustada']*100000).apply(np.ceil)
-    dfletalidade['taxa_bruta_100mil'] = (dfletalidade['num']/dfletalidade['admissoes'])*100000
-    dfletalidade
+    dfletalidade = statistics_service.age_adjust_lethality(dfWHO, dflet)
 
 
     tx_mort = round(dfmortalidade['taxa_ajustada_100mil'],1)
@@ -614,17 +603,7 @@ def graph_UTI_utilization_by_age(base,show_plot):
 
 def graph_UTI_lethality(base,dfWHO,show_plot):
     dflet_uti = base[base['uti']==1].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
-    dflet_uti.columns = ['ano_inter','idade_grupo_who','admissoes','num']
-    #df_merged = pd.merge(pop_ref, df,  how='left', left_on=['year','idade_grupo_who'], right_on=['ano_inter','idade_grupo_who']) # junta a quantidade por ano por faixa etária com a população de referencia
-    dflet_uti['taxa'] = dflet_uti['num']/dflet_uti['admissoes'] # calcula a taxa
-    dfletalidade_uti = pd.merge(dflet_uti, dfWHO,  how='left', left_on=['idade_grupo_who'], right_on=['age_group']) # junta o dataframe com a proporção do WHO
-    dfletalidade_uti['obitos_esp'] = dfletalidade_uti['taxa']*dfletalidade_uti['world_avg_dec'] # calcula a proporção da quantidade esperados
-    dfletalidade_uti = dfletalidade_uti.groupby(['ano_inter']).agg({'num':'sum','obitos_esp':'sum','admissoes':'sum','world_avg_dec':'sum'}).reset_index() # agrupa por ANO
-    # tx = obts esp / pop
-    #somar as faixas etarias do ano e dividir pela pop de ref total
-    dfletalidade_uti['taxa_ajustada'] = dfletalidade_uti['obitos_esp']/dfletalidade_uti['world_avg_dec']
-    dfletalidade_uti['taxa_ajustada_100mil'] = (dfletalidade_uti['taxa_ajustada']*100000).apply(np.ceil)
-    dfletalidade_uti['taxa_bruta_100mil'] = (dfletalidade_uti['num']/dfletalidade_uti['admissoes'])*100000
+    dfletalidade_uti = statistics_service.age_adjust_lethality(dfWHO,dflet_uti)
 
     tx_let_uti = round((dfletalidade_uti['taxa_ajustada_100mil']),1)
 

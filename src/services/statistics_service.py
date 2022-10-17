@@ -43,6 +43,25 @@ def age_adjust_ML(df,dfWHO,pop_ref):
     df_result_final = df_result[['year','population','taxa_ajd_qnt_Y','taxa_ajustada','taxa_ajustada_100mil','taxa_bruta_100mil']]
     return df_result_final
 
+def age_adjust_lethality(dfWHO, dflet):
+    dflet.columns = ['year','idade_grupo_who','population','num']
+    #df_merged = pd.merge(pop_ref, df,  how='left', left_on=['year','idade_grupo_who'], right_on=['ano_inter','idade_grupo_who']) # junta a quantidade por ano por faixa etária com a população de referencia
+    dflet['taxa'] = dflet['num']/dflet['population'] # calcula a taxa
+    dfletalidade = pd.merge(dflet, dfWHO,  how='left', left_on=['idade_grupo_who'], right_on=['age_group']) # junta o dataframe com a proporção do WHO
+    dfletalidade['obitos_esp'] = dfletalidade['taxa']*dfletalidade['world_avg_dec'] # calcula a proporção da quantidade esperados
+    dfletalidade = dfletalidade.groupby(['year']).agg({'num':'sum','obitos_esp':'sum','population':'sum','world_avg_dec':'sum'}).reset_index() # agrupa por ANO
+    # tx = obts esp / pop
+    #somar as faixas etarias do ano e dividir pela pop de ref total
+    dfletalidade['taxa_ajustada'] = dfletalidade['obitos_esp']/dfletalidade['world_avg_dec']
+    dfletalidade['taxa_ajustada_100mil'] = (dfletalidade['taxa_ajustada']*100000).apply(np.ceil)
+    dfletalidade['taxa_bruta_100mil'] = (dfletalidade['num']/dfletalidade['population'])*100000
+    dfletalidade['taxa_ajd_qnt'] = dfletalidade['obitos_esp']*dfletalidade['population'] # calcula a quantidade para a populacao de referencia
+    dfletalidade['taxa_ajd_qnt_Y'] = dfletalidade['taxa_ajd_qnt'].apply(np.ceil) # arredonda para ter um numero inteiro (count data)
+    # #df_result = result.groupby(['year']).agg({'taxa_ajd_qnt_Y':'sum','population':'sum'}).reset_index() # agrupa por ANO
+    dfletalidade_final = dfletalidade[['year','population','taxa_ajd_qnt_Y','taxa_ajustada_100mil']]
+    dfletalidade
+    return dfletalidade_final
+
 
 def age_adjust(df,dfWHO,pop_ref):
 

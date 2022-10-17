@@ -216,3 +216,85 @@ def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_regio
 
     return
 
+def generate_lethality_table(base,dfWHO):
+    letalidade_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_total_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO, letalidade_total)
+
+    letalidade_S = base[base['regiao'] == 'S'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_S_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_S)
+
+    letalidade_N = base[base['regiao'] == 'N'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_N_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_N)
+
+    letalidade_NE = base[base['regiao'] == 'N'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_NE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_NE)
+
+    letalidade_SE = base[base['regiao'] == 'SE'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_SE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_SE)
+
+    letalidade_CO = base[base['regiao'] == 'CO'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_CO_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_CO)
+
+    letalidade_hosppublico = base[base['nat_jur'] == 'Administração Pública'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_hosppublico_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_hosppublico)
+
+    letalidade_hosppart = base[base['nat_jur'] == 'Entidades Empresariais'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_hosppart_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_hosppart)
+
+    letalidade_hosppong = base[base['nat_jur'] == 'Entidades sem Fins Lucrativos'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_hospong_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_hosppong)
+
+    letalidade_uti = base[base['uti']==1].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti)
+
+    letalidade_uti_S = base[(base['uti']==1) & (base['regiao'] == 'S')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_S_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_S)
+
+    letalidade_uti_N = base[(base['uti']==1) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_N_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_N)
+
+    letalidade_uti_NE = base[(base['uti']==1) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_NE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_NE)
+
+    letalidade_uti_SE = base[(base['uti']==1) & (base['regiao'] == 'SE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_SE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_SE)
+
+    letalidade_uti_CO = base[(base['uti']==1) & (base['regiao'] == 'CO')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_CO_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_CO)
+
+    letalidade_uti_hosppublico = base[(base['uti']==1) & (base['nat_jur'] == 'Administração Pública')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_hosppublico_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_hosppublico)
+
+    letalidade_uti_hosppart = base[(base['uti']==1) & (base['nat_jur'] == 'Entidades Empresariais')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_hosppart_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_hosppart)
+
+    letalidade_uti_hosppong = base[(base['uti']==1) & (base['nat_jur'] == 'Entidades sem Fins Lucrativos')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_uti_hospong_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_hosppong)
+
+
+    lst_dfs = [letalidade_total_tx_adjusted,letalidade_S_tx_adjusted,letalidade_N_tx_adjusted,letalidade_NE_tx_adjusted,letalidade_SE_tx_adjusted,
+                letalidade_CO_tx_adjusted,letalidade_hosppublico_tx_adjusted,letalidade_hosppart_tx_adjusted,letalidade_hospong_tx_adjusted,
+                letalidade_uti_tx_adjusted,letalidade_uti_S_tx_adjusted,letalidade_uti_N_tx_adjusted,letalidade_uti_NE_tx_adjusted,
+                letalidade_uti_SE_tx_adjusted,letalidade_uti_CO_tx_adjusted,letalidade_uti_hosppublico_tx_adjusted,
+                letalidade_uti_hosppart_tx_adjusted,letalidade_uti_hospong_tx_adjusted]
+    lst_nomes = ['Lethality_tx','Lethality_S_Tx','Lethality_N_Tx','Lethality_NE_Tx','Lethality_SE_Tx','Lethality_CO_Tx','Lethality_Public_Tx',
+                'Lethality_Private_Tx','Lethality_ONG_Tx','Lethality_uti_tx','Lethality_uti_S_Tx','Lethality_uti_N_Tx','Lethality_uti_NE_Tx',
+                'Lethality_uti_SE_Tx','Lethality_uti_CO_Tx','Lethality_uti_Public_Tx','Lethality_uti_Private_Tx','Lethality_uti_ONG_Tx']
+
+    table_aapc = statistics_service.aapc_offset(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
+
+    for i in range(1,len(lst_dfs)):
+        df = lst_dfs[i]
+        nome = lst_nomes[i]
+        print(nome)
+        expr = """taxa_ajd_qnt_Y ~ year"""
+        
+        table_aapc = pd.concat([table_aapc,statistics_service.aapc_offset(df,expr,nome)])
+    
+    table_lethality_rates = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year'),how='left',left_on='Analise',right_on='Analise')
+    
+    # print(table_lethality_rates)
+    table_lethality_rates.to_excel('../tables/table_lethality_rates.xlsx')
+
+
+    return
