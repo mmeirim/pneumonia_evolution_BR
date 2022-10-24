@@ -1,7 +1,7 @@
 import services.statistics_service as statistics_service
 import pandas as pd
 
-def generate_overview_table(base):
+def generate_overview_table(base,begin_year,last_year):
 
     # VALORES BRUTOS 
 
@@ -74,13 +74,13 @@ def generate_overview_table(base):
         
         table_aapc = pd.concat([table_aapc,statistics_service.aapc(df,expr,nome)])
     
-    table_overview = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'ano_inter'),how='left',left_on='Analise',right_on='Analise')
+    table_overview = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'ano_inter',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
     
     # print(table_overview)
-    table_overview.to_excel('../tables/table_overview.xlsx')
+    table_overview.to_excel('../tables/table_overview_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
     return
 
-def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_region):
+def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_region,begin_year,last_year):
     # TAXAS POR 100 mil
     admissoes_total_tx = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index() # conta a quantidade de internacoes por ano por faixa etária
     admissoes_total_tx_adjusted = statistics_service.age_adjust(admissoes_total_tx,dfWHO,pop_ref)
@@ -209,14 +209,14 @@ def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_regio
         
         table_aapc = pd.concat([table_aapc,statistics_service.aapc_offset(df,expr,nome)])
     
-    table_100k_rates = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year'),how='left',left_on='Analise',right_on='Analise')
+    table_100k_rates = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
     
     # print(table_100k_rates)
-    table_100k_rates.to_excel('../tables/table_100k_rates.xlsx')
+    table_100k_rates.to_excel('../tables/table_100k_rates_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
 
     return
 
-def generate_lethality_table(base,dfWHO):
+def generate_lethality_table(base,dfWHO,begin_year,last_year):
     letalidade_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
     letalidade_total_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO, letalidade_total)
 
@@ -291,10 +291,10 @@ def generate_lethality_table(base,dfWHO):
         
         table_aapc = pd.concat([table_aapc,statistics_service.aapc_offset(df,expr,nome)])
     
-    table_lethality_rates = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year'),how='left',left_on='Analise',right_on='Analise')
+    table_lethality_rates = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
     
     # print(table_lethality_rates)
-    table_lethality_rates.to_excel('../tables/table_lethality_rates.xlsx')
+    table_lethality_rates.to_excel('../tables/table_lethality_rates_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
 
 
     return

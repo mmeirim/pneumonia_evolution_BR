@@ -1,7 +1,7 @@
 import pandas as pd
 
-def get_reference_population_by_age_group_and_year(reference_population,pneumoCom_dataset):
-    pop_ref_by_age_group_and_year = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']=='all') & (reference_population['year'].isin(range(2011,2020)))]
+def get_reference_population_by_age_group_and_year(reference_population,pneumoCom_dataset,begin_year,stop_year):
+    pop_ref_by_age_group_and_year = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']=='all') & (reference_population['year'].isin(range(begin_year,stop_year)))]
     pop_ref_by_age_group_and_year['age'] = pop_ref_by_age_group_and_year['age'].astype(int)
 
     idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
@@ -12,8 +12,8 @@ def get_reference_population_by_age_group_and_year(reference_population,pneumoCo
     
     return pop_ref_by_age_group_and_year
 
-def get_reference_population_by_sex_and_year(reference_population,pneumoCom_dataset):
-    pop_ref_by_sex = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']!='all') & (reference_population['year'].isin(range(2011,2020)))]
+def get_reference_population_by_sex_and_year(reference_population,pneumoCom_dataset,begin_year,stop_year):
+    pop_ref_by_sex = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']!='all') & (reference_population['year'].isin(range(begin_year,stop_year)))]
     pop_ref_by_sex['age'] = pop_ref_by_sex['age'].astype(int)
 
     idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
@@ -24,8 +24,8 @@ def get_reference_population_by_sex_and_year(reference_population,pneumoCom_data
         
     return pop_ref_by_sex
 
-def get_reference_population_by_age_group_region_and_year(reference_population,pneumoCom_dataset):
-    pop_ref_by_region = reference_population[(reference_population['age']!='TOTAL') & (reference_population['region'].isin(['North','Northeast','South','Southeast','Central-West'])) & (reference_population['sex']=='all') & (reference_population['year'].isin(range(2011,2020)))]
+def get_reference_population_by_age_group_region_and_year(reference_population,pneumoCom_dataset,begin_year,stop_year):
+    pop_ref_by_region = reference_population[(reference_population['age']!='TOTAL') & (reference_population['region'].isin(['North','Northeast','South','Southeast','Central-West'])) & (reference_population['sex']=='all') & (reference_population['year'].isin(range(begin_year,stop_year)))]
     pop_ref_by_region['age'] = pop_ref_by_region['age'].astype(int)
 
     idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
@@ -44,8 +44,8 @@ def get_cnes_clean(cnes,cnes_prof):
 
     return cnes_clean
 
-def get_pneumoCom_dataset_clean(cid10_dataset,cnes_dataset_clean, pneumoCom_dataset_raw):
-    pneumoCom_dataset_clean = pneumoCom_dataset_raw[pneumoCom_dataset_raw['ano_inter'].isin(range(2011,2020))]
+def get_pneumoCom_dataset_clean(cid10_dataset,cnes_dataset_clean, pneumoCom_dataset_raw,begin_year,stop_year):
+    pneumoCom_dataset_clean = pneumoCom_dataset_raw[pneumoCom_dataset_raw['ano_inter'].isin(range(begin_year,stop_year))]
 
     pneumoCom_dataset_clean = pd.merge(pneumoCom_dataset_clean,cid10_dataset,how='left',left_on='diag_princ_trim_upper',right_on='icd10_br')
 
