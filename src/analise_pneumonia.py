@@ -32,9 +32,9 @@ import services.tables_service as tables_service
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
-BEGIN_YEAR = 2019
-LAST_YEAR = 2021
-STOP_YEAR = 2022
+BEGIN_YEAR = 2011
+LAST_YEAR = 2019
+STOP_YEAR = 2020
 
 # ### Base PneuCom
 print("############# READING DATASETS #################")
