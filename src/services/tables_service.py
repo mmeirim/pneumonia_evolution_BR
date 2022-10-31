@@ -23,6 +23,22 @@ def generate_overview_table(base,begin_year,last_year):
     admissoes_SE = base[base['regiao'] == 'SE'].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
     admissoes_CO = base[base['regiao'] == 'CO'].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
 
+    admissoes_uti_total = base[base['uti']==1].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+
+    admissoes_uti_S = base[(base['uti']==1) & (base['regiao'] == 'S')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_uti_N = base[(base['uti']==1) & (base['regiao'] == 'N')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_uti_NE = base[(base['uti']==1) & (base['regiao'] == 'NE')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_uti_SE = base[(base['uti']==1) & (base['regiao'] == 'SE')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_uti_CO = base[(base['uti']==1) & (base['regiao'] == 'CO')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+
+    admissoes_non_uti_total = base[base['uti']==0].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+
+    admissoes_non_uti_S = base[(base['uti']==0) & (base['regiao'] == 'S')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_N = base[(base['uti']==0) & (base['regiao'] == 'N')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_NE = base[(base['uti']==0) & (base['regiao'] == 'NE')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_SE = base[(base['uti']==0) & (base['regiao'] == 'SE')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_CO = base[(base['uti']==0) & (base['regiao'] == 'CO')].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
+
     admissoes_hosppublico = base[base['nat_jur'] == 'Administração Pública'].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
     admissoes_hosppart = base[base['nat_jur'] == 'Entidades Empresariais'].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
     admissoes_hospong = base[base['nat_jur'] == 'Entidades sem Fins Lucrativos'].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
@@ -54,12 +70,16 @@ def generate_overview_table(base,begin_year,last_year):
                 admissoes_amarelos,admissoes_indigenas,admissoes_seminfo,admissoes_S,admissoes_N,admissoes_NE,admissoes_SE,admissoes_CO,
                 admissoes_hosppublico,admissoes_hosppart,admissoes_hospong,mortes_total,mortes_homens,mortes_mulheres,mortes_brancos,
                 mortes_pretos,mortes_pardos,mortes_amarelos,mortes_indigenas,mortes_seminfo,mortes_S,mortes_N,mortes_NE,mortes_SE,
-                mortes_CO,mortes_hosppublico,mortes_hosppart,mortes_hospong]
+                mortes_CO,mortes_hosppublico,mortes_hosppart,mortes_hospong,admissoes_uti_total,admissoes_uti_S,admissoes_uti_N,admissoes_uti_NE,
+                admissoes_uti_SE,admissoes_uti_CO,admissoes_non_uti_total,admissoes_non_uti_S,admissoes_non_uti_N,admissoes_non_uti_NE,
+                admissoes_non_uti_SE,admissoes_non_uti_CO]
     lst_nomes = ['Admissions','Admissions_Male','Admissions_Female','Admissions_White','Admissions_Black','Admissions_Brown','Admissions_Yellow',
                     'Admissions_Indigenous','Admissions_NoInfo','Admissions_S','Admissions_N','Admissions_NE','Admissions_SE','Admissions_CO',
                     'Admissions_Public','Admissions_Private','Admissions_ONG','Deaths','Deaths_Male','Deaths_Female','Deaths_White','Deaths_Black',
                     'Deaths_Brown','Deaths_Yellow','Deaths_Indigenous','Deaths_NoInfo','Deaths_S','Deaths_N','Deaths_NE','Deaths_SE','Deaths_CO',
-                    'Deaths_Public','Deaths_Private','Deaths_ONG']
+                    'Deaths_Public','Deaths_Private','Deaths_ONG','Admissions_uti','Admissions_uti_S','Admissions_uti_N','Admissions_uti_NE',
+                    'Admissions_uti_SE','Admissions_uti_CO','Admissions_non_uti','Admissions_non_uti_S','Admissions_non_uti_N',
+                    'Admissions_non_uti_NE','Admissions_non_uti_SE','Admissions_non_uti_CO']
 
     table_aapc = statistics_service.aapc(lst_dfs[0],"""id ~ ano_inter""",lst_nomes[0])
 
@@ -84,6 +104,12 @@ def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_regio
     # TAXAS POR 100 mil
     admissoes_total_tx = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index() # conta a quantidade de internacoes por ano por faixa etária
     admissoes_total_tx_adjusted = statistics_service.age_adjust(admissoes_total_tx,dfWHO,pop_ref)
+
+    admissoes_uti_total_tx = base[base['uti']==1].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index() # conta a quantidade de internacoes por ano por faixa etária
+    admissoes_uti_total_tx_adjusted = statistics_service.age_adjust(admissoes_uti_total_tx,dfWHO,pop_ref)
+
+    admissoes_non_uti_total_tx = base[base['uti']==0].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index() # conta a quantidade de internacoes por ano por faixa etária
+    admissoes_non_uti_total_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_total_tx,dfWHO,pop_ref)
 
     admissoes_homens_tx = base[base['sexo'] == 1].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index() # conta a quantidade de internacoes por ano por faixa etária
     admissoes_homens_tx_adjusted = statistics_service.age_adjust(admissoes_homens_tx,dfWHO,pop_ref_by_sex[pop_ref_by_sex['sex']=='male'].reset_index()[['year','idade_grupo_who','population']])
@@ -124,6 +150,36 @@ def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_regio
     admissoes_CO_tx = base[base['regiao'] == 'CO'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
     admissoes_CO_tx_adjusted = statistics_service.age_adjust(admissoes_CO_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='CW'].reset_index()[['year','idade_grupo_who','population']])
 
+    admissoes_uti_S_tx = base[(base['uti']==1) & (base['regiao'] == 'S')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_S_tx_adjusted = statistics_service.age_adjust(admissoes_uti_S_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='S'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_uti_N_tx = base[(base['uti']==1) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_N_tx_adjusted = statistics_service.age_adjust(admissoes_uti_N_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='N'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_uti_NE_tx = base[(base['uti']==1) & (base['regiao'] == 'NE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_NE_tx_adjusted = statistics_service.age_adjust(admissoes_uti_NE_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='NE'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_uti_SE_tx = base[(base['uti']==1) & (base['regiao'] == 'SE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_SE_tx_adjusted = statistics_service.age_adjust(admissoes_uti_SE_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='SE'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_uti_CO_tx = base[(base['uti']==1) & (base['regiao'] == 'CO')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_CO_tx_adjusted = statistics_service.age_adjust(admissoes_uti_CO_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='CW'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_non_uti_S_tx = base[(base['uti']==0) & (base['regiao'] == 'S')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_S_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_S_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='S'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_non_uti_N_tx = base[(base['uti']==0) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_N_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_N_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='N'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_non_uti_NE_tx = base[(base['uti']==0) & (base['regiao'] == 'NE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_NE_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_NE_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='NE'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_non_uti_SE_tx = base[(base['uti']==0) & (base['regiao'] == 'SE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_SE_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_SE_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='SE'].reset_index()[['year','idade_grupo_who','population']])
+
+    admissoes_non_uti_CO_tx = base[(base['uti']==0) & (base['regiao'] == 'CO')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_non_uti_CO_tx_adjusted = statistics_service.age_adjust(admissoes_non_uti_CO_tx,dfWHO,pop_ref_by_region[pop_ref_by_region['uf']=='CW'].reset_index()[['year','idade_grupo_who','population']])
+    
     admissoes_hosppublico_tx = base[base['nat_jur'] == 'Administração Pública'].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
     admissoes_hosppublico_tx_adjusted = statistics_service.age_adjust(admissoes_hosppublico_tx,dfWHO,pop_ref)
 
@@ -191,13 +247,19 @@ def generate_100k_rates_table(base,dfWHO,pop_ref,pop_ref_by_sex,pop_ref_by_regio
                 mortes_total_tx_adjusted,mortes_homens_tx_adjusted,mortes_mulheres_tx_adjusted,mortes_brancos_tx_adjusted,mortes_pretos_tx_adjusted,
                 mortes_pardos_tx_adjusted,mortes_amarelos_tx_adjusted,mortes_indigenas_tx_adjusted,mortes_seminfo_tx_adjusted,mortes_S_tx_adjusted,
                 mortes_N_tx_adjusted,mortes_NE_tx_adjusted,mortes_SE_tx_adjusted,mortes_CO_tx_adjusted,mortes_hosppublico_tx_adjusted,
-                mortes_hosppart_tx_adjusted,mortes_hospong_tx_adjusted]
+                mortes_hosppart_tx_adjusted,mortes_hospong_tx_adjusted,admissoes_uti_total_tx_adjusted,admissoes_uti_S_tx_adjusted,
+                admissoes_uti_N_tx_adjusted,admissoes_uti_NE_tx_adjusted,admissoes_uti_SE_tx_adjusted,admissoes_uti_CO_tx_adjusted,
+                admissoes_non_uti_total_tx_adjusted,admissoes_non_uti_S_tx_adjusted,admissoes_non_uti_N_tx_adjusted,
+                admissoes_non_uti_NE_tx_adjusted,admissoes_non_uti_SE_tx_adjusted,admissoes_non_uti_CO_tx_adjusted]
     lst_nomes = ['Admissions_Tx','Admissions_Male_Tx','Admissions_Female_Tx','Admissions_White_Tx','Admissions_Black_Tx','Admissions_Brown_Tx',
                     'Admissions_Yellow_Tx','Admissions_Indigenous_Tx','Admissions_NoInfo_Tx','Admissions_S_Tx','Admissions_N_Tx','Admissions_NE_Tx',
                     'Admissions_SE_Tx','Admissions_CO_Tx','Admissions_Public_Tx','Admissions_Private_Tx','Admissions_ONG_Tx','Mortality_Tx',
                     'Mortality_Male_Tx','Mortality_Female_Tx','Mortality_White_Tx','Mortality_Black_Tx','Mortality_Brown_Tx','Mortality_Yellow_Tx',
                     'Mortality_Indigenous_Tx','Mortality_NoInfo_Tx','Mortality_S_Tx','Mortality_N_Tx','Mortality_NE_Tx','Mortality_SE_Tx',
-                    'Mortality_CO_Tx','Mortality_Public_Tx','Mortality_Private_Tx','Mortality_ONG_Tx']
+                    'Mortality_CO_Tx','Mortality_Public_Tx','Mortality_Private_Tx','Mortality_ONG_Tx','Admissions_uti_Tx','Admissions_uti_S_Tx',
+                    'Admissions_uti_N_Tx','Admissions_uti_NE_Tx','Admissions_uti_SE_Tx','Admissions_uti_CO_Tx','Admissions_non_uti_Tx',
+                    'Admissions_non_uti_S_Tx','Admissions_non_uti_N_Tx','Admissions_non_uti_NE_Tx','Admissions_non_uti_SE_Tx',
+                    'Admissions_non_uti_CO_Tx']
 
     table_aapc = statistics_service.aapc_offset(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
 
@@ -271,15 +333,37 @@ def generate_lethality_table(base,dfWHO,begin_year,last_year):
     letalidade_uti_hosppong = base[(base['uti']==1) & (base['nat_jur'] == 'Entidades sem Fins Lucrativos')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
     letalidade_uti_hospong_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_uti_hosppong)
 
+    letalidade_non_uti = base[base['uti']==0].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti)
+
+    letalidade_non_uti_S = base[(base['uti']==0) & (base['regiao'] == 'S')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_S_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti_S)
+
+    letalidade_non_uti_N = base[(base['uti']==0) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_N_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti_N)
+
+    letalidade_non_uti_NE = base[(base['uti']==0) & (base['regiao'] == 'N')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_NE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti_NE)
+
+    letalidade_non_uti_SE = base[(base['uti']==0) & (base['regiao'] == 'SE')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_SE_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti_SE)
+
+    letalidade_non_uti_CO = base[(base['uti']==0) & (base['regiao'] == 'CO')].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_non_uti_CO_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO,letalidade_non_uti_CO)
+
 
     lst_dfs = [letalidade_total_tx_adjusted,letalidade_S_tx_adjusted,letalidade_N_tx_adjusted,letalidade_NE_tx_adjusted,letalidade_SE_tx_adjusted,
                 letalidade_CO_tx_adjusted,letalidade_hosppublico_tx_adjusted,letalidade_hosppart_tx_adjusted,letalidade_hospong_tx_adjusted,
                 letalidade_uti_tx_adjusted,letalidade_uti_S_tx_adjusted,letalidade_uti_N_tx_adjusted,letalidade_uti_NE_tx_adjusted,
                 letalidade_uti_SE_tx_adjusted,letalidade_uti_CO_tx_adjusted,letalidade_uti_hosppublico_tx_adjusted,
-                letalidade_uti_hosppart_tx_adjusted,letalidade_uti_hospong_tx_adjusted]
+                letalidade_uti_hosppart_tx_adjusted,letalidade_uti_hospong_tx_adjusted,letalidade_non_uti_tx_adjusted,
+                letalidade_non_uti_S_tx_adjusted,letalidade_non_uti_N_tx_adjusted,letalidade_non_uti_NE_tx_adjusted,
+                letalidade_non_uti_SE_tx_adjusted,letalidade_non_uti_CO_tx_adjusted]
     lst_nomes = ['Lethality_tx','Lethality_S_Tx','Lethality_N_Tx','Lethality_NE_Tx','Lethality_SE_Tx','Lethality_CO_Tx','Lethality_Public_Tx',
                 'Lethality_Private_Tx','Lethality_ONG_Tx','Lethality_uti_tx','Lethality_uti_S_Tx','Lethality_uti_N_Tx','Lethality_uti_NE_Tx',
-                'Lethality_uti_SE_Tx','Lethality_uti_CO_Tx','Lethality_uti_Public_Tx','Lethality_uti_Private_Tx','Lethality_uti_ONG_Tx']
+                'Lethality_uti_SE_Tx','Lethality_uti_CO_Tx','Lethality_uti_Public_Tx','Lethality_uti_Private_Tx','Lethality_uti_ONG_Tx',
+                'Lethality_non_uti_Tx','Lethality_non_uti_S_Tx','Lethality_non_uti_N_Tx','Lethality_non_uti_NE_Tx','Lethality_non_uti_SE_Tx',
+                'Lethality_non_uti_CO_Tx']
 
     table_aapc = statistics_service.aapc_offset(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
 
