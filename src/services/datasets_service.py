@@ -51,7 +51,7 @@ def get_pneumoCom_dataset_clean(cid10_dataset,cnes_dataset_clean, pneumoCom_data
 
     pneumoCom_dataset_clean = pd.merge(pneumoCom_dataset_clean,cnes_dataset_clean,how='left',left_on='cnes',right_on='CO_CNES')
 
-    pneumoCom_dataset_clean['classificacao'] = pneumoCom_dataset_clean['idade_grupo_who'].apply(lambda x: 1 if x in ['60-64','65-69','70-74','75-79','80-84','85+'] else 0)
+    pneumoCom_dataset_clean['classificacao'] = pneumoCom_dataset_clean['idade_grupo_who'].apply(age_group_classification)
 
     pneumoCom_dataset_clean['nat_jur'] = pneumoCom_dataset_clean['CO_NATUREZA_JUR'].apply(lambda x: 'Administração Pública' if x in range(1000,2000) else ('Entidades Empresariais' if x in range(2000,3000) else ('Entidades sem Fins Lucrativos' if x in range(3000,4000) else ('Pessoas Físicas' if x in range(4000,5000) else 'Organizações Internacionais e Outras Instituições Extraterritoriais'))))
     
@@ -91,3 +91,13 @@ def get_pneumoCom_LOS_UTI_dataset(base):
     base_losuti = base[base['uti']==1][['estado','regiao','sexo','raca_cor','idade_real_anos','diag_princ_trim_upper','nat_jur','los_uti']]
     # base_losuti.to_csv('../data/base_losuti.csv')
     return base_losuti
+
+def age_group_classification(x):
+    if x in ['20-24','25-29','30-34','35-39','40-44','45-49']:
+        return 1
+    elif x in ['50-54','55-59']:
+        return 2
+    elif x in ['60-64','65-69']:
+        return 3
+    else:
+        return 4

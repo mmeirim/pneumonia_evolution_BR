@@ -32,9 +32,9 @@ import services.tables_service as tables_service
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
-BEGIN_YEAR = 2011
-LAST_YEAR = 2019
-STOP_YEAR = 2020
+BEGIN_YEAR = 2019
+LAST_YEAR = 2021
+STOP_YEAR = 2022
 
 # ### Base PneuCom
 print("############# READING DATASETS #################")
@@ -80,8 +80,7 @@ print("############# GENERATE GRAPHS FINISHED #################")
 print("############# GENERATING TABLES #################")
 
 tables_service.generate_overview_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,
-                                            reference_population_by_age_group_sex,reference_population_by_age_group_region,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
 tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
-
+tables_service.generate_ICU_los_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
 print("############# GENERATE TABLES FINISHED #################")
