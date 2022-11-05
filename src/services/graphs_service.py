@@ -483,8 +483,7 @@ def graph_LOS_UTI_by_region(base,show_plot):
     losuti_NE =  base[(base['regiao'] == 'NE')&(base['uti']==1)].groupby(['ano_inter']).agg({'los_uti':'mean'}).reset_index()
     losuti_SE =  base[(base['regiao'] == 'SE')&(base['uti']==1)].groupby(['ano_inter']).agg({'los_uti':'mean'}).reset_index()
     losuti_CO =  base[(base['regiao'] == 'CO')&(base['uti']==1)].groupby(['ano_inter']).agg({'los_uti':'mean'}).reset_index()
-
-    r = [0,6,12,18,24,30,36,42,48]
+    r = [0,6,12,18,24,30,36,42,48,54,60]
     r2 = np.array(r) + 1
     r3 = np.array(r2) + 1
     r4 = np.array(r3) + 1
@@ -497,17 +496,17 @@ def graph_LOS_UTI_by_region(base,show_plot):
     #p1 = ax1.bar(r, g3_bars_bottom, edgecolor='white', color = '#380282' , label='Homens')
     #p2 = ax1.bar(r, g3_bars_top, bottom=g3_bars_bottom, edgecolor='white', color = '#DC143C', label='Mulheres')
 
-    p1 = ax.bar(r, round(losuti_S['los_uti'],1), color = '#442288', width = 0.9, label='Sul')
-    p2 = ax.bar(r2, round(losuti_N['los_uti'],1), color = '#6CA2EA',width = 0.9, label='Norte')
-    p3 = ax.bar(r3, round(losuti_NE['los_uti'],1), color = '#FED23F',width = 0.9, label='Nordeste')
-    p4 = ax.bar(r4, round(losuti_SE['los_uti'],1), color = '#B5D33D',width = 0.9, label='Sudeste')
-    p5 = ax.bar(r5, round(losuti_CO['los_uti'],1), color = '#EB7D5B',width = 0.9, label='Centro Oeste')
+    p1 = ax.bar(r, round(losuti_S['los_uti'],1), color = '#442288', width = 0.9, label='South')
+    p2 = ax.bar(r2, round(losuti_N['los_uti'],1), color = '#6CA2EA',width = 0.9, label='North')
+    p3 = ax.bar(r3, round(losuti_NE['los_uti'],1), color = '#FED23F',width = 0.9, label='Northeast')
+    p4 = ax.bar(r4, round(losuti_SE['los_uti'],1), color = '#B5D33D',width = 0.9, label='Southeast')
+    p5 = ax.bar(r5, round(losuti_CO['los_uti'],1), color = '#EB7D5B',width = 0.9, label='Central West')
 
-    ax.set_xticks(r3, ["2011","2012","2013","2014","2015","2016","2017","2018","2019"])
+    ax.set_xticks(r3, ["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"])
     #ax1.set_yticks([0,25,50,75,100],['0%','25%','50%','75%','100%'])
     ax.set_ylabel('Days', fontweight='bold')
     ax.set_xlabel('Years', fontweight='bold')
-    ax.set_title("Average LOS Uti", fontweight='bold')
+    ax.set_title("Average LOS ICU", fontweight='bold')
     ax.bar_label(p1, label_type='edge', fontweight='bold')
     ax.bar_label(p2, label_type='edge', fontweight='bold')
     ax.bar_label(p3, label_type='edge', fontweight='bold')
@@ -520,6 +519,42 @@ def graph_LOS_UTI_by_region(base,show_plot):
     fig.set_figwidth(20)
     fig.legend(handles, labels, loc = (0.45, 0.01), ncol=2, labelspacing=0.)
     plt.savefig(IMAGES_BASE_DIR+'los_by_region.png',dpi=1200)
+    if(show_plot): plt.show()
+    return
+
+def graph_LOS_UTI_by_age_group(base,show_plot):
+    losuti_eld =  base[(base['classificacao'] == 1)&(base['uti']==1)].groupby(['ano_inter']).agg({'los_uti':'mean'}).reset_index()
+    losuti_non_eld =  base[(base['classificacao'] == 0)&(base['uti']==1)].groupby(['ano_inter']).agg({'los_uti':'mean'}).reset_index()
+    r = [0,3,6,9,12,15,18,21,24,27,30]
+    r2 = np.array(r) + 1
+    r3 = np.array(r) + 0.5
+
+    #r2 = [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5]
+    #g3_bars_bottom = round((losuti_homens/losuti_total)*100)['los_uti']
+    #g3_bars_top = round((losuti_mulheres/losuti_total)*100)['los_uti']
+
+    fig, ax = plt.subplots(1,1,sharex=True,sharey=True,)
+    #p1 = ax1.bar(r, g3_bars_bottom, edgecolor='white', color = '#380282' , label='Homens')
+    #p2 = ax1.bar(r, g3_bars_top, bottom=g3_bars_bottom, edgecolor='white', color = '#DC143C', label='Mulheres')
+
+    p1 = ax.bar(r, round(losuti_eld['los_uti'],1), color = '#442288', width = 0.9, label='Elderly')
+    p2 = ax.bar(r2, round(losuti_non_eld['los_uti'],1), color = '#6CA2EA',width = 0.9, label='Non Elderly')
+
+    ax.set_xticks(r3, ["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"])
+    #ax1.set_yticks([0,25,50,75,100],['0%','25%','50%','75%','100%'])
+    ax.set_ylabel('Days', fontweight='bold')
+    ax.set_xlabel('Years', fontweight='bold')
+    ax.set_title("Average LOS ICU", fontweight='bold')
+    ax.bar_label(p1, label_type='edge', fontweight='bold')
+    ax.bar_label(p2, label_type='edge', fontweight='bold')
+
+
+    fig.set_facecolor("#E5F2A5")
+    handles, labels = ax.get_legend_handles_labels()
+    fig.set_figheight(8)
+    fig.set_figwidth(20)
+    fig.legend(handles, labels, loc = (0.45, 0.01), ncol=2, labelspacing=0.)
+    plt.savefig(IMAGES_BASE_DIR+'los_by_age_group.png',dpi=1200)
     if(show_plot): plt.show()
     return
 
