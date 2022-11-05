@@ -33,8 +33,8 @@ plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
 BEGIN_YEAR = 2011
-LAST_YEAR = 2021
-STOP_YEAR = 2022
+LAST_YEAR = 2019
+STOP_YEAR = 2020
 
 # ### Base PneuCom
 print("############# READING DATASETS #################")
@@ -70,8 +70,7 @@ print("############# GENERATING GRAPHS #################")
 # graphs_service.graph_LOS_UTI_by_sex(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_LOS_UTI_by_hospital_category(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_LOS_UTI_by_region(pneumoCom_dataset_clean,SHOW_PLOTS)
-graphs_service.graph_LOS_UTI_by_age_group(pneumoCom_dataset_clean,SHOW_PLOTS)
-
+# graphs_service.graph_LOS_UTI_by_age_group(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_UTI_utilization_by_hospital_category(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_UTI_utilization_by_age(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_UTI_lethality(pneumoCom_dataset_clean,who_age_group_rate_dataset,SHOW_PLOTS)
@@ -80,9 +79,9 @@ print("############# GENERATE GRAPHS FINISHED #################")
 
 print("############# GENERATING TABLES #################")
 
-# tables_service.generate_overview_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,
-#                                             reference_population_by_age_group_sex,reference_population_by_age_group_region,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_overview_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,
+                                            reference_population_by_age_group_sex,reference_population_by_age_group_region,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
 
 print("############# GENERATE TABLES FINISHED #################")
