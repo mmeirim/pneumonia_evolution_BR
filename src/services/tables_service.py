@@ -351,3 +351,17 @@ def generate_ICU_los_table(base,begin_year,last_year):
     # print(table_los_uti)
     table_los_uti.to_excel('../tables/table_los_uti_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
     return
+
+def generate_CID_ranking(base,begin_year,last_year):
+    print(sorted(base['diag_princ_trim_upper'].unique()))
+    print((base['diag_princ_trim_upper'].nunique()))
+
+    cids_ranking = base.groupby(['ano_inter','diag_princ_trim_upper']).agg({'id':'count'}).reset_index()
+    cids_ranking.sort_values(by=['ano_inter','id'], ascending = [True, False],inplace=True)
+    cids_ranking['percent'] = cids_ranking['id']/cids_ranking.groupby('ano_inter')['id'].transform('sum')
+    cids_ranking.to_excel('../tables/cids_ranking_'+str(begin_year)+'_'+str(last_year)+'.xlsx')    
+    return
+
+
+
+
