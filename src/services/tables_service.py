@@ -33,7 +33,8 @@ def generate_overview_table(base,begin_year,last_year):
     mortes_60_69 = base[(base['morte']==1) & (base['classificacao'] == 3)].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
     mortes_70_up = base[(base['morte']==1) & (base['classificacao'] == 4)].groupby(['ano_inter']).agg({'id':'count'}).reset_index()
     
-    lst_dfs = [admissoes_total,mortes_total,
+    lst_dfs = [admissoes_total,
+                mortes_total,
                 admissoes_uti_total,
                 admissoes_non_uti_total,
                 admissoes_20_49,
@@ -362,6 +363,174 @@ def generate_CID_ranking(base,begin_year,last_year):
     cids_ranking.to_excel('../tables/cids_ranking_'+str(begin_year)+'_'+str(last_year)+'.xlsx')    
     return
 
+def generate_general_admissions_table(base,begin_year,last_year):
+    admissoes_gerais_uti_total =  base.groupby(['ano_inter']).agg({'utilizacao_uti':'sum'}).reset_index()
 
+    admissoes_gerais_uti_20_49 =  base[base['classificacao'] == 1].groupby(['ano_inter']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_50_59 =  base[base['classificacao'] == 2].groupby(['ano_inter']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_60_69 =  base[base['classificacao'] == 3].groupby(['ano_inter']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_70_up =  base[base['classificacao'] == 4].groupby(['ano_inter']).agg({'utilizacao_uti':'sum'}).reset_index()
 
+    admissoes_gerais_non_uti_total =  base.groupby(['ano_inter']).agg({'admissoes_nao_uti':'sum'}).reset_index()
 
+    admissoes_gerais_non_uti_20_49 =  base[base['classificacao'] == 1].groupby(['ano_inter']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_50_59 =  base[base['classificacao'] == 2].groupby(['ano_inter']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_60_69 =  base[base['classificacao'] == 3].groupby(['ano_inter']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_70_up =  base[base['classificacao'] == 4].groupby(['ano_inter']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+
+    admissoes_gerais_total =  base.groupby(['ano_inter']).agg({'admissoes':'sum'}).reset_index()
+
+    admissoes_gerais_20_49 =  base[base['classificacao'] == 1].groupby(['ano_inter']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_50_59 =  base[base['classificacao'] == 2].groupby(['ano_inter']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_60_69 =  base[base['classificacao'] == 3].groupby(['ano_inter']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_70_up =  base[base['classificacao'] == 4].groupby(['ano_inter']).agg({'admissoes':'sum'}).reset_index()
+
+    lst_dfs = [admissoes_gerais_total,
+                admissoes_gerais_uti_total,
+                admissoes_gerais_non_uti_total,
+                admissoes_gerais_20_49,
+                admissoes_gerais_uti_20_49,
+                admissoes_gerais_non_uti_20_49,
+                admissoes_gerais_50_59,
+                admissoes_gerais_uti_50_59,
+                admissoes_gerais_non_uti_50_59,
+                admissoes_gerais_60_69,
+                admissoes_gerais_uti_60_69,
+                admissoes_gerais_non_uti_60_69,
+                admissoes_gerais_70_up,
+                admissoes_gerais_uti_70_up,
+                admissoes_gerais_non_uti_70_up]
+
+    lst_nomes = ['admissoes_gerais_total',
+                'admissoes_gerais_uti_total',
+                'admissoes_gerais_non_uti_total',
+                'admissoes_gerais_20_49',
+                'admissoes_gerais_uti_20_49',
+                'admissoes_gerais_non_uti_20_49',
+                'admissoes_gerais_50_59',
+                'admissoes_gerais_uti_50_59',
+                'admissoes_gerais_non_uti_50_59',
+                'admissoes_gerais_60_69',
+                'admissoes_gerais_uti_60_69',
+                'admissoes_gerais_non_uti_60_69',
+                'admissoes_gerais_70_up',
+                'admissoes_gerais_uti_70_up',
+                'admissoes_gerais_non_uti_70_up']
+
+    table_aapc = statistics_service.aapc(lst_dfs[0],"""admissoes ~ ano_inter""",lst_nomes[0])
+
+    for i in range(1,len(lst_dfs)):
+        df = lst_dfs[i]
+        nome = lst_nomes[i]
+
+        if nome in ['admissoes_gerais_uti_total','admissoes_gerais_uti_20_49','admissoes_gerais_uti_50_59','admissoes_gerais_uti_60_69','admissoes_gerais_uti_70_up']:
+            expr = """utilizacao_uti ~ ano_inter"""
+        elif nome in ['admissoes_gerais_non_uti_total','admissoes_gerais_non_uti_20_49','admissoes_gerais_non_uti_50_59','admissoes_gerais_non_uti_60_69','admissoes_gerais_non_uti_70_up']:
+            expr = """admissoes_nao_uti ~ ano_inter"""
+        else:
+            expr = """admissoes ~ ano_inter"""
+                
+        table_aapc = pd.concat([table_aapc,statistics_service.aapc(df,expr,nome)])
+    
+    table_admissoes_gerais = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'ano_inter',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
+    
+    # print(table_admissoes_gerais)
+    table_admissoes_gerais.to_excel('../tables/table_general_admissions_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
+    return
+
+def generate_general_admissions_100k_rates_table(base,dfWHO,pop_ref,begin_year,last_year):
+    admissoes_gerais_uti_total_tx =  base.groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_total_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_uti_total_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_uti_20_49_tx =  base[base['classificacao'] == 1].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_20_49_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_uti_20_49_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_uti_50_59_tx =  base[base['classificacao'] == 2].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_50_59_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_uti_50_59_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_uti_60_69_tx =  base[base['classificacao'] == 3].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_60_69_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_uti_60_69_tx,dfWHO,pop_ref)
+    
+    admissoes_gerais_uti_70_up_tx =  base[base['classificacao'] == 4].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_gerais_uti_70_up_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_uti_70_up_tx,dfWHO,pop_ref)
+
+    #NON ICU#
+    admissoes_gerais_non_uti_total_tx =  base.groupby(['ano_inter','idade_grupo_who']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_total_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_uti_total_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_non_uti_20_49_tx =  base[base['classificacao'] == 1].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_20_49_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_uti_20_49_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_non_uti_50_59_tx =  base[base['classificacao'] == 2].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_50_59_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_uti_50_59_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_non_uti_60_69_tx =  base[base['classificacao'] == 3].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_60_69_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_uti_60_69_tx,dfWHO,pop_ref)
+    
+    admissoes_gerais_non_uti_70_up_tx =  base[base['classificacao'] == 4].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes_nao_uti':'sum'}).reset_index()
+    admissoes_gerais_non_uti_70_up_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_uti_70_up_tx,dfWHO,pop_ref)
+
+    #ALL#
+
+    admissoes_gerais_total_tx =  base.groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_total_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_total_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_20_49_tx =  base[base['classificacao'] == 1].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_20_49_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_20_49_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_50_59_tx =  base[base['classificacao'] == 2].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_50_59_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_50_59_tx,dfWHO,pop_ref)
+
+    admissoes_gerais_60_69_tx =  base[base['classificacao'] == 3].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_60_69_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_60_69_tx,dfWHO,pop_ref)
+    
+    admissoes_gerais_70_up_tx =  base[base['classificacao'] == 4].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_70_up_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_70_up_tx,dfWHO,pop_ref)
+
+    lst_dfs = [admissoes_gerais_total_tx_adjusted,
+                admissoes_gerais_uti_total_tx_adjusted,
+                admissoes_gerais_non_uti_total_tx_adjusted,
+                admissoes_gerais_20_49_tx_adjusted,
+                admissoes_gerais_uti_20_49_tx_adjusted,
+                admissoes_gerais_non_uti_20_49_tx_adjusted,
+                admissoes_gerais_50_59_tx_adjusted,
+                admissoes_gerais_uti_50_59_tx_adjusted,
+                admissoes_gerais_non_uti_50_59_tx_adjusted,
+                admissoes_gerais_60_69_tx_adjusted,
+                admissoes_gerais_uti_60_69_tx_adjusted,
+                admissoes_gerais_non_uti_60_69_tx_adjusted,
+                admissoes_gerais_70_up_tx_adjusted,
+                admissoes_gerais_uti_70_up_tx_adjusted,
+                admissoes_gerais_non_uti_70_up_tx_adjusted]
+
+    lst_nomes = ['admissoes_gerais_total_tx_adjusted',
+                'admissoes_gerais_uti_total_tx_adjusted',
+                'admissoes_gerais_non_uti_total_tx_adjusted',
+                'admissoes_gerais_20_49_tx_adjusted',
+                'admissoes_gerais_uti_20_49_tx_adjusted',
+                'admissoes_gerais_non_uti_20_49_tx_adjusted',
+                'admissoes_gerais_50_59_tx_adjusted',
+                'admissoes_gerais_uti_50_59_tx_adjusted',
+                'admissoes_gerais_non_uti_50_59_tx_adjusted',
+                'admissoes_gerais_60_69_tx_adjusted',
+                'admissoes_gerais_uti_60_69_tx_adjusted',
+                'admissoes_gerais_non_uti_60_69_tx_adjusted',
+                'admissoes_gerais_70_up_tx_adjusted',
+                'admissoes_gerais_uti_70_up_tx_adjusted',
+                'admissoes_gerais_non_uti_70_up_tx_adjusted']
+
+    table_aapc = statistics_service.aapc(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
+
+    for i in range(1,len(lst_dfs)):
+        df = lst_dfs[i]
+        nome = lst_nomes[i]
+
+        expr = """taxa_ajd_qnt_Y ~ year"""
+                
+        table_aapc = pd.concat([table_aapc,statistics_service.aapc(df,expr,nome)])
+    
+    table_admissoes_gerais = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
+    
+    # print(table_admissoes_gerais)
+    table_admissoes_gerais.to_excel('../tables/table_general_100k_rates_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
+    return

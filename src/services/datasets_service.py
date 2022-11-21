@@ -59,6 +59,12 @@ def get_pneumoCom_dataset_clean(cid10_dataset,cnes_dataset_clean, pneumoCom_data
 
     return pneumoCom_dataset_clean
 
+def get_utilizacao_geral_dataset_clean(utilizacao_geral_dataset_raw,begin_year,stop_year):
+    utilizacao_geral_dataset_clean = utilizacao_geral_dataset_raw[utilizacao_geral_dataset_raw['ano_inter'].isin(range(begin_year,stop_year))]
+    utilizacao_geral_dataset_clean['classificacao'] = utilizacao_geral_dataset_clean['idade_grupo_who'].apply(age_group_classification)
+    
+    return utilizacao_geral_dataset_clean
+
 def filter_cids(base):
     base['remover'] = base['diag_princ_trim_upper'].apply(lambda x: 0 if x.startswith('J10') else (0 if x.startswith('J12') else (0 if x.startswith('J13') else (0 if x.startswith('J14') else (0 if x.startswith('J15') else (0 if x.startswith('J16') else (0 if x.startswith('J17') else (0 if x.startswith('J18') else 1 ) ) ) ) ) ) ) )
 
