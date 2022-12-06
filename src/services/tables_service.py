@@ -535,10 +535,5 @@ def generate_general_admissions_100k_rates_table(base,dfWHO,pop_ref,begin_year,l
     table_admissoes_gerais.to_excel('../tables/table_general_100k_rates_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
     return
 
-def generate_pneumonia_rate_table(base,base_general,dfWHO,begin_year,last_year):
-    admissoes_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
-    letalidade_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
-    letalidade_total_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO, letalidade_total)
-
 
 

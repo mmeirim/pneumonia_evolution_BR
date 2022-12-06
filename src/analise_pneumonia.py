@@ -28,16 +28,21 @@ import services.datasets_service as datasets_service
 import services.statistics_service as statistics_service
 import services.graphs_service as graphs_service
 import services.tables_service as tables_service
+import zipfile
 
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
-BEGIN_YEAR = 2019
-LAST_YEAR = 2021
-STOP_YEAR = 2022
+BEGIN_YEAR = 2011
+LAST_YEAR = 2019
+STOP_YEAR = 2020
 
 # ### Base PneuCom
 print("############# READING DATASETS #################")
+
+# with zipfile.ZipFile('../data/datasets_zip', 'r') as zip_ref:
+#     zip_ref.extractall('../data')
+
 # pneumoCom_dataset_raw = pd.read_csv('../data/sih_aih_pneumo_2011_2021.csv',sep=',')
 reference_population_raw = pd.read_csv('https://raw.githubusercontent.com/lslbastos/ibge_population_projection/main/output/data_pop_ibge_proj_2010-2016.csv',sep=',')
 # cnes_dataset_raw = pd.read_csv('../data/cnes_estabelecimentos.csv',sep=';',encoding='unicode_escape')
@@ -87,7 +92,7 @@ print("############# GENERATING TABLES #################")
 # tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
 # tables_service.generate_ICU_los_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
 # tables_service.generate_CID_ranking(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_general_admissions_table(utilizacao_geral_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_general_admissions_table(utilizacao_geral_dataset_clean,BEGIN_YEAR,LAST_YEAR)
 tables_service.generate_general_admissions_100k_rates_table(utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
 
 print("############# GENERATE TABLES FINISHED #################")
