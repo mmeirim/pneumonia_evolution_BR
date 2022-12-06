@@ -32,9 +32,9 @@ import services.tables_service as tables_service
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
-BEGIN_YEAR = 2011
-LAST_YEAR = 2019
-STOP_YEAR = 2020
+BEGIN_YEAR = 2019
+LAST_YEAR = 2021
+STOP_YEAR = 2022
 
 # ### Base PneuCom
 print("############# READING DATASETS #################")
@@ -45,8 +45,9 @@ reference_population_raw = pd.read_csv('https://raw.githubusercontent.com/lslbas
 utilizacao_geral_dataset_raw = pd.read_csv('../data/utilizacao_geral_2011_2021.csv',sep=',')
 
 # cid10_dataset = pd.read_excel('../data/cids_diag_ahrq_css_br_v5.xlsx')
+idadeWHO = pd.read_csv('../data/idadeWHO.csv',sep=',')
 who_age_group_rate_dataset = datasets_service.get_who_age_group_dataset()
-reference_population_by_age_group = datasets_service.get_reference_population_by_age_group_and_year(reference_population_raw,pneumoCom_dataset_raw,BEGIN_YEAR,STOP_YEAR)
+reference_population_by_age_group = datasets_service.get_reference_population_by_age_group_and_year(reference_population_raw,idadeWHO,BEGIN_YEAR,STOP_YEAR)
 # reference_population_by_age_group_sex = datasets_service.get_reference_population_by_sex_and_year(reference_population_raw,pneumoCom_dataset_raw,BEGIN_YEAR,STOP_YEAR)
 # reference_population_by_age_group_region = datasets_service.get_reference_population_by_age_group_region_and_year(reference_population_raw,pneumoCom_dataset_raw,BEGIN_YEAR,STOP_YEAR)
 # cnes_dataset_clean = datasets_service.get_cnes_clean(cnes_dataset_raw,cnes_prof_dataset_raw)

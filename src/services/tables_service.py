@@ -519,7 +519,7 @@ def generate_general_admissions_100k_rates_table(base,dfWHO,pop_ref,begin_year,l
                 'admissoes_gerais_uti_70_up_tx_adjusted',
                 'admissoes_gerais_non_uti_70_up_tx_adjusted']
 
-    table_aapc = statistics_service.aapc(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
+    table_aapc = statistics_service.aapc_offset(lst_dfs[0],"""taxa_ajd_qnt_Y ~ year""",lst_nomes[0])
 
     for i in range(1,len(lst_dfs)):
         df = lst_dfs[i]
@@ -527,10 +527,18 @@ def generate_general_admissions_100k_rates_table(base,dfWHO,pop_ref,begin_year,l
 
         expr = """taxa_ajd_qnt_Y ~ year"""
                 
-        table_aapc = pd.concat([table_aapc,statistics_service.aapc(df,expr,nome)])
+        table_aapc = pd.concat([table_aapc,statistics_service.aapc_offset(df,expr,nome)])
     
     table_admissoes_gerais = pd.merge(table_aapc,statistics_service.registros_ano(lst_dfs,lst_nomes,'year',begin_year,last_year),how='left',left_on='Analise',right_on='Analise')
     
     # print(table_admissoes_gerais)
     table_admissoes_gerais.to_excel('../tables/table_general_100k_rates_'+str(begin_year)+'_'+str(last_year)+'.xlsx')
     return
+
+def generate_pneumonia_rate_table(base,base_general,dfWHO,begin_year,last_year):
+    admissoes_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    letalidade_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count','morte':'sum'}).reset_index()
+    letalidade_total_tx_adjusted = statistics_service.age_adjust_lethality(dfWHO, letalidade_total)
+
+
+

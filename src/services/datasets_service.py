@@ -1,12 +1,10 @@
 import pandas as pd
 
-def get_reference_population_by_age_group_and_year(reference_population,pneumoCom_dataset,begin_year,stop_year):
+def get_reference_population_by_age_group_and_year(reference_population,idadeWHO,begin_year,stop_year):
     pop_ref_by_age_group_and_year = reference_population[(reference_population['age']!='TOTAL') & (reference_population['uf']=='BR') & (reference_population['sex']=='all') & (reference_population['year'].isin(range(begin_year,stop_year)))]
     pop_ref_by_age_group_and_year['age'] = pop_ref_by_age_group_and_year['age'].astype(int)
 
-    idadeWHO = pneumoCom_dataset.groupby(['idade_grupo_who','idade_real_anos']).agg({'id':'count'}).reset_index()
-    idadeWHO.drop('id',axis=1,inplace=True)
-
+    print(idadeWHO)
     pop_ref_by_age_group_and_year = pd.merge(pop_ref_by_age_group_and_year,idadeWHO, how='left', left_on='age',right_on='idade_real_anos')
     pop_ref_by_age_group_and_year = pop_ref_by_age_group_and_year.groupby(['year','idade_grupo_who']).agg({'population':'sum'}).reset_index()
     
