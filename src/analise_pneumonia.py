@@ -34,7 +34,7 @@ import plotly as px
 plt.style.use('seaborn-darkgrid')
 pd.set_option('display.max_columns', None)
 SHOW_PLOTS = False
-BEGIN_YEAR = 2011
+BEGIN_YEAR = 2019
 LAST_YEAR = 2021
 STOP_YEAR = 2022
 
@@ -84,19 +84,19 @@ print("############# GENERATING GRAPHS #################")
 # graphs_service.graph_UTI_utilization_by_age(pneumoCom_dataset_clean,SHOW_PLOTS)
 # graphs_service.graph_UTI_lethality(pneumoCom_dataset_clean,who_age_group_rate_dataset,SHOW_PLOTS)
 # graphs_service.graph_admissions_by_age_group(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,SHOW_PLOTS)
-graphs_service.graph_pneumonia_percent_by_age_group(pneumoCom_dataset_clean,utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,SHOW_PLOTS)
-graphs_service.graph_pneumonia_icu_percent_by_age_group(pneumoCom_dataset_clean,utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,SHOW_PLOTS)
+# graphs_service.graph_pneumonia_percent_by_age_group(pneumoCom_dataset_clean,utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,SHOW_PLOTS)
+# graphs_service.graph_pneumonia_icu_percent_by_age_group(pneumoCom_dataset_clean,utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,SHOW_PLOTS)
 
 print("############# GENERATE GRAPHS FINISHED #################")
 
 print("############# GENERATING TABLES #################")
 
-# tables_service.generate_overview_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_ICU_los_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_CID_ranking(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_general_admissions_table(utilizacao_geral_dataset_clean,BEGIN_YEAR,LAST_YEAR)
-# tables_service.generate_general_admissions_100k_rates_table(utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_overview_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_100k_rates_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_lethality_table(pneumoCom_dataset_clean,who_age_group_rate_dataset,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_ICU_los_table(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_CID_ranking(pneumoCom_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_general_admissions_table(utilizacao_geral_dataset_clean,BEGIN_YEAR,LAST_YEAR)
+tables_service.generate_general_admissions_100k_rates_table(utilizacao_geral_dataset_clean,who_age_group_rate_dataset,reference_population_by_age_group,BEGIN_YEAR,LAST_YEAR)
 
 print("############# GENERATE TABLES FINISHED #################")
