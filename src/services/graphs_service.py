@@ -663,6 +663,166 @@ def graph_UTI_lethality(base,dfWHO,show_plot):
     if(show_plot): plt.show()
     return
 
+def graph_admissions_by_age_group(base, dfWHO, pop_ref, show_plot):
+    admissoes_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+
+    admissoes_non_elderly = base[base['classificacao'].isin([1,2])].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_elderly = base[base['classificacao'].isin([3,4])].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    
+    admissoes_total_tx_adjusted = statistics_service.age_adjust(admissoes_total,dfWHO,pop_ref)
+    admissoes_non_elderly_tx_adjusted = statistics_service.age_adjust(admissoes_non_elderly,dfWHO,pop_ref)
+    admissoes_eldery_tx_adjusted = statistics_service.age_adjust(admissoes_elderly,dfWHO,pop_ref)
+
+    tx_admissoes_total = round(admissoes_total_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_non_elderly = round(admissoes_non_elderly_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_elderly = round(admissoes_eldery_tx_adjusted['taxa_ajustada_100mil'],1)
+
+    r = [0,1,2,3,4,5,6,7,8,9,10]
+
+    fig, ax1 = plt.subplots(1,1,sharex=True,)
+    p1 = ax1.plot(r, tx_admissoes_total, marker='o', markerfacecolor='#380282', markersize=4, color = '#380282' , label='All')
+    p2 = ax1.plot(r, tx_admissoes_non_elderly, marker='o', markerfacecolor='#7009E8', markersize=4, color = '#7009E8' , label='Non-elderly')
+    p3 = ax1.plot(r, tx_admissoes_elderly, marker='o', markerfacecolor='#DC193C', markersize=4, color = '#DC193C' , label='Elderly')
+
+    ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"])
+    # ax1.set_yticks([0,20,40,60,80,100],['0','20','40','60','80','100'])
+    ax1.set_ylabel('Age-adjusted Admissions rate', fontweight='bold')
+    ax1.set_title("Admissions rate by age group", fontweight='bold')
+
+    for i in range(len(tx_admissoes_total)):
+        ax1.text(r[i], tx_admissoes_total[i]+10, "%.1f" %tx_admissoes_total[i], ha="center", fontweight='bold')
+        ax1.text(r[i], tx_admissoes_non_elderly[i]+10, "%.1f" %tx_admissoes_non_elderly[i], ha="center", fontweight='bold')
+        ax1.text(r[i], tx_admissoes_elderly[i]+10, "%.1f" %tx_admissoes_elderly[i], ha="center", fontweight='bold')
+        
+    fig.set_facecolor("#E5F2A5")
+
+    fig.set_figheight(6)
+    fig.set_figwidth(12)
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, loc = (0.35, 0.01), ncol=3, labelspacing=0.)
+
+    plt.savefig(IMAGES_BASE_DIR+'admissions_ratio_by_age_group.png',dpi=1200)
+    if(show_plot): plt.show()
+    return
+
+def graph_pneumonia_percent_by_age_group(base, base_geral, dfWHO, pop_ref, show_plot):
+    admissoes_total = base.groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+
+    admissoes_non_elderly = base[base['classificacao'].isin([1,2])].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_elderly = base[base['classificacao'].isin([3,4])].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    
+    admissoes_total_tx_adjusted = statistics_service.age_adjust(admissoes_total,dfWHO,pop_ref)
+    admissoes_non_elderly_tx_adjusted = statistics_service.age_adjust(admissoes_non_elderly,dfWHO,pop_ref)
+    admissoes_eldery_tx_adjusted = statistics_service.age_adjust(admissoes_elderly,dfWHO,pop_ref)
+
+    admissoes_gerais_total = base_geral.groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+
+    admissoes_gerais_non_elderly = base_geral[base_geral['classificacao'].isin([1,2])].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    admissoes_gerais_elderly = base_geral[base_geral['classificacao'].isin([3,4])].groupby(['ano_inter','idade_grupo_who']).agg({'admissoes':'sum'}).reset_index()
+    
+    admissoes_gerais_total_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_total,dfWHO,pop_ref)
+    admissoes_gerais_non_elderly_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_non_elderly,dfWHO,pop_ref)
+    admissoes_gerais_eldery_tx_adjusted = statistics_service.age_adjust(admissoes_gerais_elderly,dfWHO,pop_ref)
+
+    tx_admissoes_total = round(admissoes_total_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_non_elderly = round(admissoes_non_elderly_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_elderly = round(admissoes_eldery_tx_adjusted['taxa_ajustada_100mil'],1)
+
+    tx_admissoes_gerais_total = round(admissoes_gerais_total_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_gerais_non_elderly = round(admissoes_gerais_non_elderly_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_gerais_elderly = round(admissoes_gerais_eldery_tx_adjusted['taxa_ajustada_100mil'],1)
+
+    pneumonia_percent_total = round((tx_admissoes_total/tx_admissoes_gerais_total)*100,1)
+    pneumonia_percent_non_elderly = round((tx_admissoes_non_elderly/tx_admissoes_gerais_non_elderly)*100,1)
+    pneumonia_percent_elderly = round((tx_admissoes_elderly/tx_admissoes_gerais_elderly)*100,1)
+
+    r = [0,1,2,3,4,5,6,7,8,9,10]
+
+    fig, ax1 = plt.subplots(1,1,sharex=True,)
+    p1 = ax1.plot(r, pneumonia_percent_total, marker='o', markerfacecolor='#380282', markersize=4, color = '#380282' , label='All')
+    p2 = ax1.plot(r, pneumonia_percent_non_elderly, marker='o', markerfacecolor='#7009E8', markersize=4, color = '#7009E8' , label='Non-elderly')
+    p3 = ax1.plot(r, pneumonia_percent_elderly, marker='o', markerfacecolor='#DC193C', markersize=4, color = '#DC193C' , label='Elderly')
+
+    ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"])
+    ax1.set_yticks([0,2,4,6,8,10,12],['0','2','4','6','8','10','12'])
+    ax1.set_ylabel('Pneumonia admissions rate ', fontweight='bold')
+    ax1.set_title("Pneumonia admissions rate in SUS by age group", fontweight='bold')
+
+    for i in range(len(tx_admissoes_total)):
+        ax1.text(r[i], pneumonia_percent_total[i]+0.2, "%.1f" %pneumonia_percent_total[i], ha="center", fontweight='bold')
+        ax1.text(r[i], pneumonia_percent_non_elderly[i]+0.2, "%.1f" %pneumonia_percent_non_elderly[i], ha="center", fontweight='bold')
+        ax1.text(r[i], pneumonia_percent_elderly[i]+0.2, "%.1f" %pneumonia_percent_elderly[i], ha="center", fontweight='bold')
+        
+    fig.set_facecolor("#E5F2A5")
+
+    fig.set_figheight(6)
+    fig.set_figwidth(12)
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, loc = (0.35, 0.01), ncol=3, labelspacing=0.)
+
+    plt.savefig(IMAGES_BASE_DIR+'pneumonia_percent_admissions_by_age_group.png',dpi=1200)
+    if(show_plot): plt.show()
+    return
+
+def graph_pneumonia_icu_percent_by_age_group(base, base_geral, dfWHO, pop_ref, show_plot):
+    admissoes_uti_total = base[base['uti']==1].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+
+    admissoes_uti_non_elderly = base[(base['uti']==1) & (base['classificacao'].isin([1,2]))].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    admissoes_uti_elderly = base[(base['uti']==1) & (base['classificacao'].isin([3,4]))].groupby(['ano_inter','idade_grupo_who']).agg({'id':'count'}).reset_index()
+    
+    admissoes_uti_total_tx_adjusted = statistics_service.age_adjust(admissoes_uti_total,dfWHO,pop_ref)
+    admissoes_uti_non_elderly_tx_adjusted = statistics_service.age_adjust(admissoes_uti_non_elderly,dfWHO,pop_ref)
+    admissoes_uti_eldery_tx_adjusted = statistics_service.age_adjust(admissoes_uti_elderly,dfWHO,pop_ref)
+
+    admissoes_uti_gerais_total = base_geral.groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+
+    admissoes_uti_gerais_non_elderly = base_geral[base_geral['classificacao'].isin([1,2])].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    admissoes_uti_gerais_elderly = base_geral[base_geral['classificacao'].isin([3,4])].groupby(['ano_inter','idade_grupo_who']).agg({'utilizacao_uti':'sum'}).reset_index()
+    
+    admissoes_uti_gerais_total_tx_adjusted = statistics_service.age_adjust(admissoes_uti_gerais_total,dfWHO,pop_ref)
+    admissoes_uti_gerais_non_elderly_tx_adjusted = statistics_service.age_adjust(admissoes_uti_gerais_non_elderly,dfWHO,pop_ref)
+    admissoes_uti_gerais_eldery_tx_adjusted = statistics_service.age_adjust(admissoes_uti_gerais_elderly,dfWHO,pop_ref)
+
+    tx_admissoes_uti_total = round(admissoes_uti_total_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_uti_non_elderly = round(admissoes_uti_non_elderly_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_uti_elderly = round(admissoes_uti_eldery_tx_adjusted['taxa_ajustada_100mil'],1)
+
+    tx_admissoes_uti_gerais_total = round(admissoes_uti_gerais_total_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_uti_gerais_non_elderly = round(admissoes_uti_gerais_non_elderly_tx_adjusted['taxa_ajustada_100mil'],1)
+    tx_admissoes_uti_gerais_elderly = round(admissoes_uti_gerais_eldery_tx_adjusted['taxa_ajustada_100mil'],1)
+
+    pneumonia_percent_total = round((tx_admissoes_uti_total/tx_admissoes_uti_gerais_total)*100,1)
+    pneumonia_percent_non_elderly = round((tx_admissoes_uti_non_elderly/tx_admissoes_uti_gerais_non_elderly)*100,1)
+    pneumonia_percent_elderly = round((tx_admissoes_uti_elderly/tx_admissoes_uti_gerais_elderly)*100,1)
+
+    r = [0,1,2,3,4,5,6,7,8,9,10]
+
+    fig, ax1 = plt.subplots(1,1,sharex=True,)
+    p1 = ax1.plot(r, pneumonia_percent_total, marker='o', markerfacecolor='#380282', markersize=4, color = '#380282' , label='All')
+    p2 = ax1.plot(r, pneumonia_percent_non_elderly, marker='o', markerfacecolor='#7009E8', markersize=4, color = '#7009E8' , label='Non-elderly')
+    p3 = ax1.plot(r, pneumonia_percent_elderly, marker='o', markerfacecolor='#DC193C', markersize=4, color = '#DC193C' , label='Elderly')
+
+    ax1.set_xticks(r, ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"])
+    ax1.set_yticks([0,2,4,6,8,10],['0','2','4','6','8','10'])
+    ax1.set_ylabel('Pneumonia ICU admissions rate', fontweight='bold')
+    ax1.set_title("Pneumonia ICU admissions rate in SUS by age group", fontweight='bold')
+
+    for i in range(len(tx_admissoes_uti_total)):
+        ax1.text(r[i], pneumonia_percent_total[i]+0.1, "%.1f" %pneumonia_percent_total[i], ha="center", fontweight='bold')
+        ax1.text(r[i], pneumonia_percent_non_elderly[i]+0.1, "%.1f" %pneumonia_percent_non_elderly[i], ha="center", fontweight='bold')
+        ax1.text(r[i], pneumonia_percent_elderly[i]+0.1, "%.1f" %pneumonia_percent_elderly[i], ha="center", fontweight='bold')
+        
+    fig.set_facecolor("#E5F2A5")
+
+    fig.set_figheight(6)
+    fig.set_figwidth(12)
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, loc = (0.35, 0.01), ncol=3, labelspacing=0.)
+
+    plt.savefig(IMAGES_BASE_DIR+'pneumonia_percent_admissions_icu_by_age_group.png',dpi=1200)
+    if(show_plot): plt.show()
+    return
+
 
 
 
