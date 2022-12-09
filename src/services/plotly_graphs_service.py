@@ -135,13 +135,13 @@ def graph_pneumocom_lethality():
             tick0 = 2011,
             dtick = 1
         ),
-        legend = dict(
-            orientation="v",
-            yanchor="top",
-            y=0.9,
-            xanchor="right",
-            x=1.12
-        )
+        # legend = dict(
+        #     orientation="v",
+        #     yanchor="top",
+        #     y=0.9,
+        #     xanchor="right",
+        #     x=1.12
+        # )
     )
 
     fig.update_xaxes(title_text="Year")
@@ -289,13 +289,13 @@ def graph_pneumocom_percent_of_general_admissions():
             tick0 = 2011,
             dtick = 1
         ),
-        legend = dict(
-            orientation="v",
-            yanchor="top",
-            y=0.8,
-            xanchor="right",
-            x=1.12
-        )
+        # legend = dict(
+        #     orientation="v",
+        #     yanchor="top",
+        #     y=0.8,
+        #     xanchor="right",
+        #     x=1.12
+        # )
     )
 
     fig.update_xaxes(title_text="Year")
