@@ -136,11 +136,11 @@ def graph_pneumocom_lethality():
             dtick = 1
         ),
         legend = dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.12,
+            orientation="v",
+            yanchor="top",
+            y=0.9,
             xanchor="right",
-            x=1
+            x=1.12
         )
     )
 
@@ -290,11 +290,11 @@ def graph_pneumocom_percent_of_general_admissions():
             dtick = 1
         ),
         legend = dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.12,
+            orientation="v",
+            yanchor="top",
+            y=0.8,
             xanchor="right",
-            x=1
+            x=1.12
         )
     )
 
