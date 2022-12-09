@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from pathlib import Path
 
 import services.plotly_graphs_service as plotly_graphs_service
 
@@ -31,6 +32,7 @@ for element in make_choice2:
         except:
             filter2.insert(1,element)
 
+file_path = Path(__file__).parents[2] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
 
 
 st.title("Pneumocom Dashboard") 
@@ -40,7 +42,7 @@ st.header('Pneumonia Admissions by age group')
 
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_admissions(),use_container_width=True)
 
-age_groups = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',2,nrows=28, usecols="A:L,P:S",thousands=',')
+age_groups = pd.read_excel(file_path,2,nrows=28, usecols="A:L,P:S",thousands=',')
 st.dataframe(age_groups[age_groups["Data Information"].isin(filter2)][filter].style.format({
     2011: '{:,.0f}'.format,
     2012: '{:,.0f}'.format,
@@ -68,7 +70,7 @@ st.plotly_chart(plotly_graphs_service.graph_pneumocom_lethality(),use_container_
 
 st.subheader('Pneumonia Lethality by age group')
 
-lethality = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4,nrows=22, usecols="A:L,P:S",thousands=',')
+lethality = pd.read_excel(file_path,4,nrows=22, usecols="A:L,P:S",thousands=',')
 st.dataframe(lethality[lethality["Data Information"].isin(filter2)][filter].style.format({
     2011: '{:.2%}'.format,
     2012: '{:.2%}'.format,
@@ -89,7 +91,7 @@ st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
 st.subheader('Pneumonia ICU occupation by age group')
 
-age_groups_icu = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3,nrows=42, usecols="A:L,P:S",thousands=',')
+age_groups_icu = pd.read_excel(file_path,3,nrows=42, usecols="A:L,P:S",thousands=',')
 st.dataframe(age_groups_icu[filter].style.format({
     2011: '{:,.0f}'.format,
     2012: '{:,.0f}'.format,
@@ -114,7 +116,7 @@ st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 st.header('Pneumocom vs General Admissions by age group')
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissions(),use_container_width=True)
 
-data = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0,nrows=28, usecols="A:L,P:S",thousands=',')
+data = pd.read_excel(file_path,0,nrows=28, usecols="A:L,P:S",thousands=',')
 
 st.dataframe(data[filter].style.format({
     2011: '{:,.0f}'.format,
