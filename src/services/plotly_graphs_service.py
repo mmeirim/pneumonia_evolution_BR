@@ -2,60 +2,62 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from pathlib import Path
 
+file_path = Path(__file__).parents[2] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
 
 def graph_pneumocom_lethality():
     years = ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"]
 
-    admissoes_total = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=22,thousands=',')
+    admissoes_total = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=22,thousands=',')
     admissoes_total = admissoes_total.astype(float)
 
-    admissoes_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=37,thousands=',')
+    admissoes_non_elderly = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=37,thousands=',')
     admissoes_non_elderly = admissoes_non_elderly.astype(float)
 
-    admissoes_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=40,thousands=',')
+    admissoes_elderly = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=40,thousands=',')
     admissoes_elderly = admissoes_elderly.astype(float)
 
-    admissoes_icu = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=23,thousands=',')
+    admissoes_icu = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=23,thousands=',')
     admissoes_icu = admissoes_icu.astype(float)
 
-    admissoes_icu_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=38,thousands=',')
+    admissoes_icu_non_elderly = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=38,thousands=',')
     admissoes_icu_non_elderly = admissoes_icu_non_elderly.astype(float)
 
-    admissoes_icu_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=41,thousands=',')
+    admissoes_icu_elderly = pd.read_excel(file_path,3, header=None, nrows=1, usecols="B:J,P:Q",skiprows=41,thousands=',')
     admissoes_icu_elderly = admissoes_icu_elderly.astype(float)
 
-    letalidade_icu = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=15,thousands=',')
+    letalidade_icu = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=15,thousands=',')
     letalidade_icu = round(letalidade_icu.astype(float)*100,1)
     letalidade_icu = letalidade_icu.T
     letalidade_icu.columns = ["count"]
     letalidade_icu["year"] = years
 
-    letalidade_icu_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=20,thousands=',')
+    letalidade_icu_non_elderly = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=20,thousands=',')
     letalidade_icu_non_elderly = round(letalidade_icu_non_elderly.astype(float)*100,1)
     letalidade_icu_non_elderly = letalidade_icu_non_elderly.T
     letalidade_icu_non_elderly.columns = ["count"]
     letalidade_icu_non_elderly["year"] = years
 
-    letalidade_icu_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=21,thousands=',')
+    letalidade_icu_elderly = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=21,thousands=',')
     letalidade_icu_elderly = round(letalidade_icu_elderly.astype(float)*100,1)
     letalidade_icu_elderly = letalidade_icu_elderly.T
     letalidade_icu_elderly.columns = ["count"]
     letalidade_icu_elderly["year"] = years
 
-    letalidade_non_icu = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=8,thousands=',')
+    letalidade_non_icu = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=8,thousands=',')
     letalidade_non_icu = round(letalidade_non_icu.astype(float)*100,1)
     letalidade_non_icu = letalidade_non_icu.T
     letalidade_non_icu.columns = ["count"]
     letalidade_non_icu["year"] = years
 
-    letalidade_non_icu_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=13,thousands=',')
+    letalidade_non_icu_non_elderly = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=13,thousands=',')
     letalidade_non_icu_non_elderly = round(letalidade_non_icu_non_elderly.astype(float)*100,1)
     letalidade_non_icu_non_elderly = letalidade_non_icu_non_elderly.T
     letalidade_non_icu_non_elderly.columns = ["count"]
     letalidade_non_icu_non_elderly["year"] = years
 
-    letalidade_non_icu_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=14,thousands=',')
+    letalidade_non_icu_elderly = pd.read_excel(file_path,4, header=None, nrows=1, usecols="B:J,P:Q",skiprows=14,thousands=',')
     letalidade_non_icu_elderly = round(letalidade_non_icu_elderly.astype(float)*100,1)
     letalidade_non_icu_elderly = letalidade_non_icu_elderly.T
     letalidade_non_icu_elderly.columns = ["count"]
@@ -151,19 +153,19 @@ def graph_pneumocom_lethality():
 def graph_pneumocom_admissions():
     years = ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"]
 
-    admissoes_total = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=8,thousands=',')
+    admissoes_total = pd.read_excel(file_path,2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=8,thousands=',')
     admissoes_total = admissoes_total.astype(float)
     admissoes_total = admissoes_total.T
     admissoes_total.columns = ["count"]
     admissoes_total["year"] = years
 
-    admissoes_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=13,thousands=',')
+    admissoes_non_elderly = pd.read_excel(file_path,2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=13,thousands=',')
     admissoes_non_elderly = admissoes_non_elderly.astype(float)
     admissoes_non_elderly = admissoes_non_elderly.T
     admissoes_non_elderly.columns = ["count"]
     admissoes_non_elderly["year"] = years
 
-    admissoes_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=14,thousands=',')
+    admissoes_elderly = pd.read_excel(file_path,2, header=None, nrows=1, usecols="B:J,P:Q",skiprows=14,thousands=',')
     admissoes_elderly = admissoes_elderly.astype(float)
     admissoes_elderly = admissoes_elderly.T
     admissoes_elderly.columns = ["count"]
@@ -204,22 +206,22 @@ def graph_pneumocom_admissions():
 
 def graph_pneumocom_percent_of_general_admissions():
     years = ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"]
-    admissoes_total = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=16,thousands=',')
+    admissoes_total = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=16,thousands=',')
     admissoes_total = admissoes_total.astype(float)
 
-    admissoes_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=26,thousands=',')
+    admissoes_non_elderly = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=26,thousands=',')
     admissoes_non_elderly = admissoes_non_elderly.astype(float)
 
-    admissoes_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=28,thousands=',')
+    admissoes_elderly = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=28,thousands=',')
     admissoes_elderly = admissoes_elderly.astype(float)
 
-    admissoes_gerais_total_tx = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=15,thousands=',')
+    admissoes_gerais_total_tx = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=15,thousands=',')
     admissoes_gerais_total_tx = admissoes_gerais_total_tx.astype(float)
 
-    admissoes_gerais_non_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=25,thousands=',')
+    admissoes_gerais_non_elderly = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=25,thousands=',')
     admissoes_gerais_non_elderly = admissoes_gerais_non_elderly.astype(float)
 
-    admissoes_gerais_elderly = pd.read_excel('../tables/Pneumonia_data_by_age_group_08.11.xlsx',0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=27,thousands=',')
+    admissoes_gerais_elderly = pd.read_excel(file_path,0, header=None, nrows=1, usecols="B:J,P:Q",skiprows=27,thousands=',')
     admissoes_gerais_elderly = admissoes_gerais_elderly.astype(float)
 
     pneumonia_percent_total_tx = round((admissoes_total/admissoes_gerais_total_tx)*100,1)
