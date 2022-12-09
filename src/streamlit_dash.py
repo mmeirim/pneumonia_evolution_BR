@@ -32,7 +32,7 @@ for element in make_choice2:
         except:
             filter2.insert(1,element)
 
-file_path = Path(__file__).parents[2] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
+file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
 
 
 st.title("Pneumocom Dashboard") 
