@@ -1,11 +1,16 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+from PIL import Image
+import qrcode
 
 import services.plotly_graphs_service as plotly_graphs_service
 
 st.set_page_config(layout="wide")
 
+# logo = Image.open(Path(__file__).parents[1] / 'images/puc-rio_logo.png')
+# st.sidebar.image(logo,use_column_width=True)
+st.sidebar.title("Pneumocom Dashboard")
 make_choice = st.sidebar.multiselect('Select years to display on tables:',[2012,2013,2014,2015,2016,2017,2018])
 filter = ["Data Information",2011,2019,'%∆*','AAPC [95% CI]',2020,2021,'%∆*.1','AAPC [95% CI].1']
 for element in make_choice:
@@ -36,6 +41,22 @@ file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group_08.1
 
 
 st.title("Pneumocom Dashboard") 
+
+###########################################################################################################################
+col1, col2, col3 = st.columns([2,0.1,2])
+col1.header('Pneumonia Study')
+image = Image.open(Path(__file__).parents[1] / 'images/studypopulation_pneumonia.png')
+col1.image(image)
+
+col3.header('Objectives')
+col3.markdown('#####  Present the evolution of community-acquired pneumonia admissions and deaths , as well as the effects on the Brazilian Unified Health System (SUS) from 2011 to 2021.')
+col3.markdown('---')
+
+col3.header('Data Source')
+col3.markdown('###  AIH/SIH')
+col3.markdown('#### - Brazil')
+col3.markdown('#### - 2011-2021')
+col3.markdown('#### - Filtering by age (≥20 years)')
 
 ###########################################################################################################################
 st.header('Pneumonia Admissions by age group')
@@ -137,3 +158,14 @@ st.write("AAPC - Annual Average Percent Change (estimated from Poisson regressio
 st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
 st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
+###########################################################################################################################
+# col1, col2, col3 = st.columns([2,0.1,2])
+st.header('Pneumonia ICD-10 Ranking')
+image_cid = Image.open(Path(__file__).parents[1] / 'images/icd-10_ranking.png')
+st.image(image_cid,use_column_width=True, caption='Top 10 ICD-10 Pneumonia Admissons')
+
+###########################################################################################################################
+qr_code = Image.open(Path(__file__).parents[1] / 'images/qr_code.png')
+
+st.sidebar.markdown('#### Open This App on your smartphone')
+st.sidebar.image(qr_code, use_column_width=True)
