@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from PIL import Image
-import qrcode
 
 import services.plotly_graphs_service as plotly_graphs_service
 
