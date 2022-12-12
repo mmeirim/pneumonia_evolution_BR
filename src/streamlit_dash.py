@@ -157,7 +157,7 @@ for i in range(len(age_groups_icu)):
 idx_list = age_groups_icu.index[age_groups_icu["Data Information"].isin(filter2)].tolist()
 idx_list1 = [x+1 for x in idx_list]
 idx_list2 = [x+2 for x in idx_list]
-idx_list = idx_list + idx_list1 + idx_list2
+idx_list = idx_list + idx_list1
 
 with st.expander("See Table"):
     st.dataframe(age_groups_icu[age_groups_icu.index.isin(idx_list)][filter].style.format({
@@ -259,7 +259,7 @@ with st.expander("See Table"):
     st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
     st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
     st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
-    
+
 st.markdown('---')
 ###########################################################################################################################
 st.header('Pneumonia ICD-10 Ranking')
