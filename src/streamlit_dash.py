@@ -20,7 +20,7 @@ for element in make_choice:
 
 make_choice2 = st.sidebar.multiselect('Select age groups to display on tables:',['\t\t\t\t\t\t\t\t\t\t\t\t20-49','\t\t\t\t\t\t\t\t\t\t\t\t50-59','\t\t\t\t\t\t\t\t\t\t\t\t60-69','\t\t\t\t\t\t\t\t\t\t\t\t70+'])
 filter2 = ["Admissions","\t\t\t\t\t\t\t\t\t\t\t\tNon-Elderly","\t\t\t\t\t\t\t\t\t\t\t\tElderly","Age-adjusted Admissions rate ᵃ","Deaths","Age-adjusted In-hospital\nMortality rate ᵃ",
-            "Age-adjusted In-hospital\nLethality rate","Age-adjusted Non ICU\nLethality rate","Age-adjusted ICU\nLethality rate", "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tICU Admissions", "Age-adjusted ICU Admissions \nRate ᵃ"]
+            "Age-adjusted In-hospital\nLethality rate","Age-adjusted Non ICU\nLethality rate","Age-adjusted ICU\nLethality rate", "Age-adjusted ICU Admissions \nRate ᵃ"]
 for element in make_choice2:
     filter2.insert(1,element)
 
@@ -35,8 +35,8 @@ double_tab_list = ['ICU Admissions','Non ICU Admissions','Pneumonia Admissions',
 st.title("Pneumonia Dashboard") 
 
 ###########################################################################################################################
-col1, col2, col3 = st.columns([2,0.1,2])
-col1.header('Pneumonia Study')
+col1, col2, col3 = st.columns([2,0.01,2])
+col1.header('Study population')
 image = Image.open(Path(__file__).parents[1] / 'images/studypopulation_pneumonia.png')
 col1.image(image)
 
@@ -50,6 +50,26 @@ col3.markdown('#### - Brazil')
 col3.markdown('#### - 2011-2021')
 col3.markdown('#### - Filtering by age (≥20 years)')
 
+st.markdown('---')
+col1, col2, col3 = st.columns([2,0.01,2])
+col1.header('Materials and Methods')
+col1.markdown('### Outcomes and Variables')
+col1.markdown('##### - Age-adjusted hospitalization rate per 100,000 population')
+col1.markdown('##### - Age-adjusted in-hospital mortality rate per 100,000 population')
+col1.markdown('##### - Age-adjusted in-hospital lethality rate')
+col1.markdown('##### - Age-adjusted in-hospital Pneumonia occupation rate')
+col1.markdown('##### - Crude number of hospital admissions')
+col1.markdown('##### - Crude number of in-hospital deaths')
+
+col3.header('')
+col3.markdown('')
+col3.markdown('')
+col3.markdown('### Statistical Analysis')
+col3.markdown('##### - Annual Average Percent Change (AAPC) and its respective 95% confidence interval (95% CI)')
+col3.markdown('##### - For count data: AAPC obtained using log-linear Poisson regression with the year as the preditor')
+col3.markdown('##### - For age-standardized rates: AAPC obtained using log-linear Poisson regression with the year as the preditor and adding the age-adjusted denominator as an offset variable to the previous Poisson model')
+
+st.markdown('---')
 ###########################################################################################################################
 st.header('Pneumonia Admissions and Mortality by age group')
 
@@ -166,7 +186,6 @@ data = pd.read_excel(file_path,0,nrows=28, usecols="A:L,P:S",thousands=',')
 
 for i in range(len(data)):
     element = data.loc[i].at["Data Information"]
-    print(element)
     if element in tab_list:
         data.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
     if element in double_tab_list:
@@ -206,12 +225,12 @@ data_icu = pd.read_excel(file_path,1,nrows=28, usecols="A:L,P:S",thousands=',')
 
 for i in range(len(data_icu)):
     element = data_icu.loc[i].at["Data Information"]
-    print(element)
     if element in tab_list:
         data_icu.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
     if element in double_tab_list:
         data_icu.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
 
+filter2.append("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tICU Admissions")
 data_icu_idx_list = data_icu.index[data_icu["Data Information"].isin(filter2)].tolist()
 data_icu_idx_list1 = [x+1 for x in data_icu_idx_list]
 data_icu_idx_list = data_icu_idx_list + data_icu_idx_list1
