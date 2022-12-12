@@ -18,26 +18,19 @@ for element in make_choice:
             if element > filter[i] and element < filter[i+1]:
                 filter.insert(i+1,element)
 
-make_choice2 = st.sidebar.multiselect('Select age groups to display on tables:',['20-49','50-59','60-69','70+'])
-filter2 = ["Admissions","Non-Elderly","Elderly","Age-adjusted Admissions rate ᵃ","Deaths","Age-adjusted In-hospital\nMortality rate ᵃ",
+make_choice2 = st.sidebar.multiselect('Select age groups to display on tables:',['\t\t\t\t\t\t\t\t\t\t\t\t20-49','\t\t\t\t\t\t\t\t\t\t\t\t50-59','\t\t\t\t\t\t\t\t\t\t\t\t60-69','\t\t\t\t\t\t\t\t\t\t\t\t70+'])
+filter2 = ["Admissions","\t\t\t\t\t\t\t\t\t\t\t\tNon-Elderly","\t\t\t\t\t\t\t\t\t\t\t\tElderly","Age-adjusted Admissions rate ᵃ","Deaths","Age-adjusted In-hospital\nMortality rate ᵃ",
             "Age-adjusted In-hospital\nLethality rate","Age-adjusted Non ICU\nLethality rate","Age-adjusted ICU\nLethality rate"]
 for element in make_choice2:
-    for i in range(len(filter2)-1):
-        try:
-            el = int(element[:2])
-            first = int(filter2[i][:2])
-            second = int(filter2[i+1][:2])
-            if isinstance(first, int) and isinstance(second, int):
-                if el > first and el < second:
-                    filter2.insert(i+1,element)
-            if isinstance(first, int):
-                if el > first:
-                    filter2.insert(i+1,element)
-        except:
-            filter2.insert(1,element)
+    filter2.insert(1,element)
+
+def highlight_rows(s):
+    return ['background-color: green']*len(s) if s.index % 2 == 0 else ['background-color: white']*len(s)
 
 file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
 
+tab_list = ['20-49','50-59','60-69','70+','Non-Elderly','Elderly']
+double_tab_list = ['ICU Admissions','Non ICU Admissions','Pneumonia Admissions','Pneumonia Admissions (ICU)']
 
 st.title("Pneumocom Dashboard") 
 
@@ -63,6 +56,14 @@ st.header('Pneumonia Admissions by age group')
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_admissions(),use_container_width=True)
 
 age_groups = pd.read_excel(file_path,2,nrows=28, usecols="A:L,P:S",thousands=',')
+
+for i in range(len(age_groups)):
+    element = age_groups.loc[i].at["Data Information"]
+    if element in tab_list:
+        age_groups.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
+    if element in double_tab_list:
+        age_groups.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
+
 st.dataframe(age_groups[age_groups["Data Information"].isin(filter2)][filter].style.format({
     2011: '{:,.0f}'.format,
     2012: '{:,.0f}'.format,
@@ -91,6 +92,14 @@ st.plotly_chart(plotly_graphs_service.graph_pneumocom_lethality(),use_container_
 st.subheader('Pneumonia Lethality by age group')
 
 lethality = pd.read_excel(file_path,4,nrows=22, usecols="A:L,P:S",thousands=',')
+
+for i in range(len(lethality)):
+    element = lethality.loc[i].at["Data Information"]
+    if element in tab_list:
+        lethality.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
+    if element in double_tab_list:
+        lethality.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
+
 st.dataframe(lethality[lethality["Data Information"].isin(filter2)][filter].style.format({
     2011: '{:.2%}'.format,
     2012: '{:.2%}'.format,
@@ -112,7 +121,22 @@ st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 st.subheader('Pneumonia ICU occupation by age group')
 
 age_groups_icu = pd.read_excel(file_path,3,nrows=42, usecols="A:L,P:S",thousands=',')
-st.dataframe(age_groups_icu[filter].style.format({
+
+for i in range(len(age_groups_icu)):
+    element = age_groups_icu.loc[i].at["Data Information"]
+    if element in tab_list:
+        age_groups_icu.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
+    if element in double_tab_list:
+        age_groups_icu.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
+
+idx_list = age_groups_icu.index[age_groups_icu["Data Information"].isin(filter2)].tolist()
+idx_list1 = idx_list
+idx_list2 = idx_list
+idx_list1 = [x+1 for x in idx_list]
+idx_list2 = [x+2 for x in idx_list2]
+idx_list = idx_list + idx_list1 + idx_list2
+
+st.dataframe(age_groups_icu[age_groups_icu.index.isin(idx_list)][filter].style.format({
     2011: '{:,.0f}'.format,
     2012: '{:,.0f}'.format,
     2013: '{:,.0f}'.format,
@@ -138,7 +162,22 @@ st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissi
 
 data = pd.read_excel(file_path,0,nrows=28, usecols="A:L,P:S",thousands=',')
 
-st.dataframe(data[filter].style.format({
+for i in range(len(data)):
+    element = data.loc[i].at["Data Information"]
+    print(element)
+    if element in tab_list:
+        data.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
+    if element in double_tab_list:
+        data.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
+
+data_idx_list = data.index[data["Data Information"].isin(filter2)].tolist()
+data_idx_list1 = data_idx_list
+data_idx_list2 = data_idx_list
+data_idx_list1 = [x+1 for x in data_idx_list]
+data_idx_list2 = [x+2 for x in data_idx_list]
+data_idx_list = data_idx_list + data_idx_list1 + data_idx_list
+
+st.dataframe(data[data.index.isin(data_idx_list)][filter].style.format({
     2011: '{:,.0f}'.format,
     2012: '{:,.0f}'.format,
     2013: '{:,.0f}'.format,
