@@ -9,7 +9,7 @@ st.set_page_config(layout="wide")
 
 # logo = Image.open(Path(__file__).parents[1] / 'images/puc-rio_logo.png')
 # st.sidebar.image(logo,use_column_width=True)
-st.sidebar.title("Pneumocom Dashboard")
+st.sidebar.title("Pneumonia Dashboard")
 make_choice = st.sidebar.multiselect('Select years to display on tables:',[2012,2013,2014,2015,2016,2017,2018])
 filter = ["Data Information",2011,2019,'%∆*','AAPC [95% CI]',2020,2021,'%∆*.1','AAPC [95% CI].1']
 for element in make_choice:
@@ -20,7 +20,7 @@ for element in make_choice:
 
 make_choice2 = st.sidebar.multiselect('Select age groups to display on tables:',['\t\t\t\t\t\t\t\t\t\t\t\t20-49','\t\t\t\t\t\t\t\t\t\t\t\t50-59','\t\t\t\t\t\t\t\t\t\t\t\t60-69','\t\t\t\t\t\t\t\t\t\t\t\t70+'])
 filter2 = ["Admissions","\t\t\t\t\t\t\t\t\t\t\t\tNon-Elderly","\t\t\t\t\t\t\t\t\t\t\t\tElderly","Age-adjusted Admissions rate ᵃ","Deaths","Age-adjusted In-hospital\nMortality rate ᵃ",
-            "Age-adjusted In-hospital\nLethality rate","Age-adjusted Non ICU\nLethality rate","Age-adjusted ICU\nLethality rate"]
+            "Age-adjusted In-hospital\nLethality rate","Age-adjusted Non ICU\nLethality rate","Age-adjusted ICU\nLethality rate", "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tICU Admissions", "Age-adjusted ICU Admissions \nRate ᵃ"]
 for element in make_choice2:
     filter2.insert(1,element)
 
@@ -32,7 +32,7 @@ file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group_08.1
 tab_list = ['20-49','50-59','60-69','70+','Non-Elderly','Elderly']
 double_tab_list = ['ICU Admissions','Non ICU Admissions','Pneumonia Admissions','Pneumonia Admissions (ICU)']
 
-st.title("Pneumocom Dashboard") 
+st.title("Pneumonia Dashboard") 
 
 ###########################################################################################################################
 col1, col2, col3 = st.columns([2,0.1,2])
@@ -51,9 +51,11 @@ col3.markdown('#### - 2011-2021')
 col3.markdown('#### - Filtering by age (≥20 years)')
 
 ###########################################################################################################################
-st.header('Pneumonia Admissions by age group')
+st.header('Pneumonia Admissions and Mortality by age group')
 
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_admissions(),use_container_width=True)
+
+st.subheader('Pneumonia Admissions and Mortality by age group')
 
 age_groups = pd.read_excel(file_path,2,nrows=28, usecols="A:L,P:S",thousands=',')
 
@@ -130,10 +132,8 @@ for i in range(len(age_groups_icu)):
         age_groups_icu.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
 
 idx_list = age_groups_icu.index[age_groups_icu["Data Information"].isin(filter2)].tolist()
-idx_list1 = idx_list
-idx_list2 = idx_list
 idx_list1 = [x+1 for x in idx_list]
-idx_list2 = [x+2 for x in idx_list2]
+idx_list2 = [x+2 for x in idx_list]
 idx_list = idx_list + idx_list1 + idx_list2
 
 st.dataframe(age_groups_icu[age_groups_icu.index.isin(idx_list)][filter].style.format({
@@ -157,8 +157,10 @@ st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
 ###########################################################################################################################
 
-st.header('Pneumocom vs General Admissions by age group')
+st.header('Pneumonia and General Admissions by age group')
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissions(),use_container_width=True)
+
+st.subheader('Pneumonia and General admissions by age group')
 
 data = pd.read_excel(file_path,0,nrows=28, usecols="A:L,P:S",thousands=',')
 
@@ -171,11 +173,8 @@ for i in range(len(data)):
         data.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
 
 data_idx_list = data.index[data["Data Information"].isin(filter2)].tolist()
-data_idx_list1 = data_idx_list
-data_idx_list2 = data_idx_list
 data_idx_list1 = [x+1 for x in data_idx_list]
-data_idx_list2 = [x+2 for x in data_idx_list]
-data_idx_list = data_idx_list + data_idx_list1 + data_idx_list
+data_idx_list = data_idx_list + data_idx_list1
 
 st.dataframe(data[data.index.isin(data_idx_list)][filter].style.format({
     2011: '{:,.0f}'.format,
@@ -197,6 +196,47 @@ st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard populat
 st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
 ###########################################################################################################################
+
+st.header('Pneumonia and General ICU Admissions by age group')
+st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissions_icu(),use_container_width=True)
+
+st.subheader('Pneumonia and General ICU admissions by age group')
+
+data_icu = pd.read_excel(file_path,1,nrows=28, usecols="A:L,P:S",thousands=',')
+
+for i in range(len(data_icu)):
+    element = data_icu.loc[i].at["Data Information"]
+    print(element)
+    if element in tab_list:
+        data_icu.loc[i,"Data Information"] = "\t\t\t\t\t\t\t\t\t\t\t\t" + element
+    if element in double_tab_list:
+        data_icu.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
+
+data_icu_idx_list = data_icu.index[data_icu["Data Information"].isin(filter2)].tolist()
+data_icu_idx_list1 = [x+1 for x in data_icu_idx_list]
+data_icu_idx_list = data_icu_idx_list + data_icu_idx_list1
+
+st.dataframe(data_icu[data_icu.index.isin(data_icu_idx_list)][filter].style.format({
+    2011: '{:,.0f}'.format,
+    2012: '{:,.0f}'.format,
+    2013: '{:,.0f}'.format,
+    2014: '{:,.0f}'.format,
+    2015: '{:,.0f}'.format,
+    2016: '{:,.0f}'.format,
+    2017: '{:,.0f}'.format,
+    2018: '{:,.0f}'.format,
+    2019: '{:,.0f}'.format,
+    2020: '{:,.0f}'.format,
+    2021: '{:,.0f}'.format,
+    '%∆*' : '{:,.2f}'.format,
+    '%∆*.1' : '{:,.2f}'.format
+}),use_container_width=True)
+st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
+st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
+
+
+
 # col1, col2, col3 = st.columns([2,0.1,2])
 st.header('Pneumonia ICD-10 Ranking')
 image_cid = Image.open(Path(__file__).parents[1] / 'images/icd-10_ranking.png')

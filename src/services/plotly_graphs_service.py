@@ -244,39 +244,39 @@ def graph_pneumocom_percent_of_general_admissions():
     admissoes_elderly.columns = ["count"]
     admissoes_elderly["year"] = years
     
-    fig = make_subplots(rows=1, cols=3, subplot_titles=("All", "Non elderly", "Elderly"), specs=[[{"secondary_y": True},{"secondary_y": True},{"secondary_y": True}]])
+    fig = make_subplots(rows=1, cols=3, subplot_titles=("All", "Non elderly", "Elderly"), specs=[[{"secondary_y": True},{"secondary_y": True},{"secondary_y": True}]])    
     fig.add_trace( 
-        go.Bar(x = years,y =admissoes_total["count"],name="All",legendgroup="group1",legendgrouptitle_text="First Graph"),
+        go.Bar(x = years,y =admissoes_total["count"],name="Pneumonia Admissions",legendgroup="group1",legendgrouptitle_text="First Graph"),
         secondary_y=False,
         row=1, col=1,
     )
 
     fig.add_trace(
-        go.Line(x = years,y = pneumonia_percent_total_transposed["percent"],name="All (%)",legendgroup="group1"),
+        go.Line(x = years,y = pneumonia_percent_total_transposed["percent"],name="Pneumonia Admissions (%)",legendgroup="group1"),
         secondary_y=True,
         row=1, col=1,
     )
 
     fig.add_trace( 
-        go.Bar(x = years,y =admissoes_non_elderly["count"],name="Non Elderly",legendgroup="group2",legendgrouptitle_text="Second Graph"),
+        go.Bar(x = years,y =admissoes_non_elderly["count"],name="Pneumonia Admissions",legendgroup="group2",legendgrouptitle_text="Second Graph"),
         secondary_y=False,
         row=1, col=2,
     )
 
     fig.add_trace(
-        go.Line(x = years,y = pneumonia_percent_total_transposed["non-elderly"],name="Non Elderly (%)",legendgroup="group2"),
+        go.Line(x = years,y = pneumonia_percent_total_transposed["non-elderly"],name="Pneumonia Admissions (%)",legendgroup="group2"),
         secondary_y=True,
         row=1, col=2,
     )
 
     fig.add_trace( 
-        go.Bar(x = years,y =admissoes_elderly["count"],name="Elderly",legendgroup="group3", legendgrouptitle_text="Third Graph",),
+        go.Bar(x = years,y =admissoes_elderly["count"],name="Pneumonia Admissions",legendgroup="group3", legendgrouptitle_text="Third Graph",),
         secondary_y=False,
         row=1, col=3,
     )
 
     fig.add_trace(
-        go.Line(x = years,y = pneumonia_percent_total_transposed["elderly"],name="Elderly (%)",legendgroup="group3"),
+        go.Line(x = years,y = pneumonia_percent_total_transposed["elderly"],name="Pneumonia Admissions (%)",legendgroup="group3"),
         secondary_y=True,
         row=1, col=3,
     )
@@ -299,7 +299,108 @@ def graph_pneumocom_percent_of_general_admissions():
     )
 
     fig.update_xaxes(title_text="Year")
-    fig.update_yaxes(title_text="<b>Age-adjusted Pneumonia admissions rate</b> ", secondary_y=False,)
-    fig.update_yaxes(title_text="<b>Percentage of Pneumonia cases</b>", secondary_y=True)
+    fig.update_yaxes(title_text="<b>Age-adjusted admissions rate</b> ", secondary_y=False,)
+    fig.update_yaxes(title_text="<b>Percentage cases</b>", secondary_y=True)
+
+    return fig
+
+
+def graph_pneumocom_percent_of_general_admissions_icu():
+    years = ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"]
+    admissoes_total = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=16,thousands=',')
+    admissoes_total = admissoes_total.astype(float)
+
+    admissoes_non_elderly = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=26,thousands=',')
+    admissoes_non_elderly = admissoes_non_elderly.astype(float)
+
+    admissoes_elderly = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=28,thousands=',')
+    admissoes_elderly = admissoes_elderly.astype(float)
+
+    admissoes_gerais_total_tx = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=15,thousands=',')
+    admissoes_gerais_total_tx = admissoes_gerais_total_tx.astype(float)
+
+    admissoes_gerais_non_elderly = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=25,thousands=',')
+    admissoes_gerais_non_elderly = admissoes_gerais_non_elderly.astype(float)
+
+    admissoes_gerais_elderly = pd.read_excel(file_path,1, header=None, nrows=1, usecols="B:J,P:Q",skiprows=27,thousands=',')
+    admissoes_gerais_elderly = admissoes_gerais_elderly.astype(float)
+
+    pneumonia_percent_total_tx = round((admissoes_total/admissoes_gerais_total_tx)*100,1)
+
+    pneumonia_percent_total_transposed = pneumonia_percent_total_tx.T
+    pneumonia_percent_total_transposed.columns = ["percent"]
+    pneumonia_percent_total_transposed["non-elderly"] = round((admissoes_non_elderly/admissoes_gerais_non_elderly)*100,1).T
+    pneumonia_percent_total_transposed["elderly"] = round((admissoes_elderly/admissoes_gerais_elderly)*100,1).T
+    pneumonia_percent_total_transposed["year"] = years
+
+    admissoes_total = admissoes_total.T
+    admissoes_total.columns = ["count"]
+    admissoes_total["year"] = years
+
+    admissoes_non_elderly = admissoes_non_elderly.T
+    admissoes_non_elderly.columns = ["count"]
+    admissoes_non_elderly["year"] = years
+
+    admissoes_elderly = admissoes_elderly.T
+    admissoes_elderly.columns = ["count"]
+    admissoes_elderly["year"] = years
+    
+    fig = make_subplots(rows=1, cols=3, subplot_titles=("All", "Non elderly", "Elderly"), specs=[[{"secondary_y": True},{"secondary_y": True},{"secondary_y": True}]])    
+    fig.add_trace( 
+        go.Bar(x = years,y =admissoes_total["count"],name="ICU Pneumonia Admissions",legendgroup="group1",legendgrouptitle_text="First Graph"),
+        secondary_y=False,
+        row=1, col=1,
+    )
+
+    fig.add_trace(
+        go.Line(x = years,y = pneumonia_percent_total_transposed["percent"],name="ICU Pneumonia Admissions (%)",legendgroup="group1"),
+        secondary_y=True,
+        row=1, col=1,
+    )
+
+    fig.add_trace( 
+        go.Bar(x = years,y =admissoes_non_elderly["count"],name="ICU Pneumonia Admissions",legendgroup="group2",legendgrouptitle_text="Second Graph"),
+        secondary_y=False,
+        row=1, col=2,
+    )
+
+    fig.add_trace(
+        go.Line(x = years,y = pneumonia_percent_total_transposed["non-elderly"],name="ICU Pneumonia Admissions (%)",legendgroup="group2"),
+        secondary_y=True,
+        row=1, col=2,
+    )
+
+    fig.add_trace( 
+        go.Bar(x = years,y =admissoes_elderly["count"],name="ICU Pneumonia Admissions",legendgroup="group3", legendgrouptitle_text="Third Graph",),
+        secondary_y=False,
+        row=1, col=3,
+    )
+
+    fig.add_trace(
+        go.Line(x = years,y = pneumonia_percent_total_transposed["elderly"],name="ICU Pneumonia Admissions (%)",legendgroup="group3"),
+        secondary_y=True,
+        row=1, col=3,
+    )
+
+    fig.update_layout(
+        title_text="Pneumonia Age-adjusted admissions and percentage of general admissions",
+        template='simple_white',
+        xaxis = dict(
+            tickmode = 'linear',
+            tick0 = 2011,
+            dtick = 1
+        ),
+        # legend = dict(
+        #     orientation="v",
+        #     yanchor="top",
+        #     y=0.8,
+        #     xanchor="right",
+        #     x=1.12
+        # )
+    )
+
+    fig.update_xaxes(title_text="Year")
+    fig.update_yaxes(title_text="<b>Age-adjusted admissions rate</b> ", secondary_y=False,)
+    fig.update_yaxes(title_text="<b>Percentage cases</b>", secondary_y=True)
 
     return fig
