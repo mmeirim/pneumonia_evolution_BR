@@ -75,7 +75,7 @@ st.header('Pneumonia Admissions and Mortality by age group')
 
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_admissions(),use_container_width=True)
 
-st.subheader('Pneumonia Admissions and Mortality by age group')
+st.subheader('Pneumonia Admissions and Mortality by age group (Table)')
 
 age_groups = pd.read_excel(file_path,2,nrows=28, usecols="A:L,P:S",thousands=',')
 
@@ -86,32 +86,34 @@ for i in range(len(age_groups)):
     if element in double_tab_list:
         age_groups.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
 
-st.dataframe(age_groups[age_groups["Data Information"].isin(filter2)][filter].style.format({
-    2011: '{:,.0f}'.format,
-    2012: '{:,.0f}'.format,
-    2013: '{:,.0f}'.format,
-    2014: '{:,.0f}'.format,
-    2015: '{:,.0f}'.format,
-    2016: '{:,.0f}'.format,
-    2017: '{:,.0f}'.format,
-    2018: '{:,.0f}'.format,
-    2019: '{:,.0f}'.format,
-    2020: '{:,.0f}'.format,
-    2021: '{:,.0f}'.format,
-    '%∆*' : '{:,.2f}'.format,
-    '%∆*.1' : '{:,.2f}'.format
-}),use_container_width=True)
-st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
-st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
-st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
+with st.expander("See Table"):
+    st.dataframe(age_groups[age_groups["Data Information"].isin(filter2)][filter].style.format({
+        2011: '{:,.0f}'.format,
+        2012: '{:,.0f}'.format,
+        2013: '{:,.0f}'.format,
+        2014: '{:,.0f}'.format,
+        2015: '{:,.0f}'.format,
+        2016: '{:,.0f}'.format,
+        2017: '{:,.0f}'.format,
+        2018: '{:,.0f}'.format,
+        2019: '{:,.0f}'.format,
+        2020: '{:,.0f}'.format,
+        2021: '{:,.0f}'.format,
+        '%∆*' : '{:,.2f}'.format,
+        '%∆*.1' : '{:,.2f}'.format
+    }),use_container_width=True)
+    st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+    st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
+    st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
+st.markdown('---')
 ###########################################################################################################################
 
 st.header('Pneumonia Lethality and ICU occupation by age group')
 
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_lethality(),use_container_width=True)
 
-st.subheader('Pneumonia Lethality by age group')
+st.subheader('Pneumonia Lethality by age group (Table)')
 
 lethality = pd.read_excel(file_path,4,nrows=22, usecols="A:L,P:S",thousands=',')
 
@@ -122,25 +124,26 @@ for i in range(len(lethality)):
     if element in double_tab_list:
         lethality.loc[i,"Data Information"] = '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + element
 
-st.dataframe(lethality[lethality["Data Information"].isin(filter2)][filter].style.format({
-    2011: '{:.2%}'.format,
-    2012: '{:.2%}'.format,
-    2013: '{:.2%}'.format,
-    2014: '{:.2%}'.format,
-    2015: '{:.2%}'.format,
-    2016: '{:.2%}'.format,
-    2017: '{:.2%}'.format,
-    2018: '{:.2%}'.format,
-    2019: '{:.2%}'.format,
-    2020: '{:.2%}'.format,
-    2021: '{:.2%}'.format,
-    '%∆*' : '{:,.2f}'.format,
-    '%∆*.1' : '{:,.2f}'.format
-}),use_container_width=True)
-st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
-st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
+with st.expander("See Table"):
+    st.dataframe(lethality[lethality["Data Information"].isin(filter2)][filter].style.format({
+        2011: '{:.2%}'.format,
+        2012: '{:.2%}'.format,
+        2013: '{:.2%}'.format,
+        2014: '{:.2%}'.format,
+        2015: '{:.2%}'.format,
+        2016: '{:.2%}'.format,
+        2017: '{:.2%}'.format,
+        2018: '{:.2%}'.format,
+        2019: '{:.2%}'.format,
+        2020: '{:.2%}'.format,
+        2021: '{:.2%}'.format,
+        '%∆*' : '{:,.2f}'.format,
+        '%∆*.1' : '{:,.2f}'.format
+    }),use_container_width=True)
+    st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+    st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
-st.subheader('Pneumonia ICU occupation by age group')
+st.subheader('Pneumonia ICU occupation by age group (Table)')
 
 age_groups_icu = pd.read_excel(file_path,3,nrows=42, usecols="A:L,P:S",thousands=',')
 
@@ -156,31 +159,33 @@ idx_list1 = [x+1 for x in idx_list]
 idx_list2 = [x+2 for x in idx_list]
 idx_list = idx_list + idx_list1 + idx_list2
 
-st.dataframe(age_groups_icu[age_groups_icu.index.isin(idx_list)][filter].style.format({
-    2011: '{:,.0f}'.format,
-    2012: '{:,.0f}'.format,
-    2013: '{:,.0f}'.format,
-    2014: '{:,.0f}'.format,
-    2015: '{:,.0f}'.format,
-    2016: '{:,.0f}'.format,
-    2017: '{:,.0f}'.format,
-    2018: '{:,.0f}'.format,
-    2019: '{:,.0f}'.format,
-    2020: '{:,.0f}'.format,
-    2021: '{:,.0f}'.format,
-    '%∆*' : '{:,.2f}'.format,
-    '%∆*.1' : '{:,.2f}'.format
-}),use_container_width=True)
-st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
-st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
-st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
+with st.expander("See Table"):
+    st.dataframe(age_groups_icu[age_groups_icu.index.isin(idx_list)][filter].style.format({
+        2011: '{:,.0f}'.format,
+        2012: '{:,.0f}'.format,
+        2013: '{:,.0f}'.format,
+        2014: '{:,.0f}'.format,
+        2015: '{:,.0f}'.format,
+        2016: '{:,.0f}'.format,
+        2017: '{:,.0f}'.format,
+        2018: '{:,.0f}'.format,
+        2019: '{:,.0f}'.format,
+        2020: '{:,.0f}'.format,
+        2021: '{:,.0f}'.format,
+        '%∆*' : '{:,.2f}'.format,
+        '%∆*.1' : '{:,.2f}'.format
+    }),use_container_width=True)
+    st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+    st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
+    st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
+st.markdown('---')
 ###########################################################################################################################
 
 st.header('Pneumonia and General Admissions by age group')
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissions(),use_container_width=True)
 
-st.subheader('Pneumonia and General admissions by age group')
+st.subheader('Pneumonia and General admissions by age group (Table)')
 
 data = pd.read_excel(file_path,0,nrows=28, usecols="A:L,P:S",thousands=',')
 
@@ -194,32 +199,33 @@ for i in range(len(data)):
 data_idx_list = data.index[data["Data Information"].isin(filter2)].tolist()
 data_idx_list1 = [x+1 for x in data_idx_list]
 data_idx_list = data_idx_list + data_idx_list1
+with st.expander("See Table"):
+    st.dataframe(data[data.index.isin(data_idx_list)][filter].style.format({
+        2011: '{:,.0f}'.format,
+        2012: '{:,.0f}'.format,
+        2013: '{:,.0f}'.format,
+        2014: '{:,.0f}'.format,
+        2015: '{:,.0f}'.format,
+        2016: '{:,.0f}'.format,
+        2017: '{:,.0f}'.format,
+        2018: '{:,.0f}'.format,
+        2019: '{:,.0f}'.format,
+        2020: '{:,.0f}'.format,
+        2021: '{:,.0f}'.format,
+        '%∆*' : '{:,.2f}'.format,
+        '%∆*.1' : '{:,.2f}'.format
+    }),use_container_width=True)
+    st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+    st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
+    st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
 
-st.dataframe(data[data.index.isin(data_idx_list)][filter].style.format({
-    2011: '{:,.0f}'.format,
-    2012: '{:,.0f}'.format,
-    2013: '{:,.0f}'.format,
-    2014: '{:,.0f}'.format,
-    2015: '{:,.0f}'.format,
-    2016: '{:,.0f}'.format,
-    2017: '{:,.0f}'.format,
-    2018: '{:,.0f}'.format,
-    2019: '{:,.0f}'.format,
-    2020: '{:,.0f}'.format,
-    2021: '{:,.0f}'.format,
-    '%∆*' : '{:,.2f}'.format,
-    '%∆*.1' : '{:,.2f}'.format
-}),use_container_width=True)
-st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
-st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
-st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
-
+st.markdown('---')
 ###########################################################################################################################
 
 st.header('Pneumonia and General ICU Admissions by age group')
 st.plotly_chart(plotly_graphs_service.graph_pneumocom_percent_of_general_admissions_icu(),use_container_width=True)
 
-st.subheader('Pneumonia and General ICU admissions by age group')
+st.subheader('Pneumonia and General ICU admissions by age group (Table')
 
 data_icu = pd.read_excel(file_path,1,nrows=28, usecols="A:L,P:S",thousands=',')
 
@@ -234,29 +240,28 @@ filter2.append("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tICU Admissions")
 data_icu_idx_list = data_icu.index[data_icu["Data Information"].isin(filter2)].tolist()
 data_icu_idx_list1 = [x+1 for x in data_icu_idx_list]
 data_icu_idx_list = data_icu_idx_list + data_icu_idx_list1
-
-st.dataframe(data_icu[data_icu.index.isin(data_icu_idx_list)][filter].style.format({
-    2011: '{:,.0f}'.format,
-    2012: '{:,.0f}'.format,
-    2013: '{:,.0f}'.format,
-    2014: '{:,.0f}'.format,
-    2015: '{:,.0f}'.format,
-    2016: '{:,.0f}'.format,
-    2017: '{:,.0f}'.format,
-    2018: '{:,.0f}'.format,
-    2019: '{:,.0f}'.format,
-    2020: '{:,.0f}'.format,
-    2021: '{:,.0f}'.format,
-    '%∆*' : '{:,.2f}'.format,
-    '%∆*.1' : '{:,.2f}'.format
-}),use_container_width=True)
-st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
-st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
-st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
-
-
-
-# col1, col2, col3 = st.columns([2,0.1,2])
+with st.expander("See Table"):
+    st.dataframe(data_icu[data_icu.index.isin(data_icu_idx_list)][filter].style.format({
+        2011: '{:,.0f}'.format,
+        2012: '{:,.0f}'.format,
+        2013: '{:,.0f}'.format,
+        2014: '{:,.0f}'.format,
+        2015: '{:,.0f}'.format,
+        2016: '{:,.0f}'.format,
+        2017: '{:,.0f}'.format,
+        2018: '{:,.0f}'.format,
+        2019: '{:,.0f}'.format,
+        2020: '{:,.0f}'.format,
+        2021: '{:,.0f}'.format,
+        '%∆*' : '{:,.2f}'.format,
+        '%∆*.1' : '{:,.2f}'.format
+    }),use_container_width=True)
+    st.write("AAPC - Annual Average Percent Change (estimated from Poisson regression model")
+    st.write("ᵃ Rates per 100,000 population, adjusted to the WHO standard population")
+    st.write("*Percentage change between 2011-2019 and 2019-2021, respectively")
+    
+st.markdown('---')
+###########################################################################################################################
 st.header('Pneumonia ICD-10 Ranking')
 image_cid = Image.open(Path(__file__).parents[1] / 'images/icd-10_ranking.png')
 st.image(image_cid,use_column_width=True, caption='Top 10 ICD-10 Pneumonia Admissons')
