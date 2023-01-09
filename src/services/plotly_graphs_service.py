@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from pathlib import Path
 
-file_path = Path(__file__).parents[2] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
+file_path = Path(__file__).parents[2] / 'tables/Pneumonia_data_by_age_group.xlsx'
 
 def graph_pneumocom_lethality():
     years = ["2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021"]

@@ -24,10 +24,11 @@ filter2 = ["Admissions","\t\t\t\t\t\t\t\t\t\t\t\tNon-Elderly","\t\t\t\t\t\t\t\t\
 for element in make_choice2:
     filter2.insert(1,element)
 
-def highlight_rows(s):
-    return ['background-color: green']*len(s) if s.index % 2 == 0 else ['background-color: white']*len(s)
+def highlight_rows(row):
+    if row['Data Information'] in filter2:
+        return [highlight, default]
 
-file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group_08.11.xlsx'
+file_path = Path(__file__).parents[1] / 'tables/Pneumonia_data_by_age_group.xlsx'
 
 tab_list = ['20-49','50-59','60-69','70+','Non-Elderly','Elderly']
 double_tab_list = ['ICU Admissions','Non ICU Admissions','Pneumonia Admissions','Pneumonia Admissions (ICU)']
